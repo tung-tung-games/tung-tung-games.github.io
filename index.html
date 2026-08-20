@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +6,7 @@
 
     <title>!! TUNG GAMES !!</title>
 
-    <!-- Browser tab icon -->
+    <!-- Tab icon -->
     <link rel="icon" type="image/png" href="SPIRE.png">
 
     <style>
@@ -21,6 +20,83 @@
         body{
             background:#121212;
             color:white;
+        }
+
+        /* ===== PASSWORD SCREEN ===== */
+
+        #passwordScreen{
+            position:fixed;
+            inset:0;
+            background:#121212;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            z-index:9999;
+        }
+
+        .passwordBox{
+            background:#1d1d1d;
+            padding:40px;
+            border-radius:15px;
+            text-align:center;
+            width:90%;
+            max-width:400px;
+            border:2px solid #4da6ff;
+        }
+
+        .passwordBox img{
+            width:100px;
+            height:100px;
+            object-fit:contain;
+            margin-bottom:15px;
+        }
+
+        .passwordBox h2{
+            margin-bottom:10px;
+        }
+
+        .passwordBox p{
+            color:#bbbbbb;
+            margin-bottom:20px;
+        }
+
+        .passwordBox input{
+            width:100%;
+            padding:14px;
+            border:none;
+            border-radius:8px;
+            margin-bottom:15px;
+            font-size:16px;
+            text-align:center;
+        }
+
+        .passwordBox button{
+            width:100%;
+            padding:14px;
+            border:none;
+            border-radius:8px;
+            background:#4da6ff;
+            color:white;
+            font-size:16px;
+            font-weight:bold;
+            cursor:pointer;
+            transition:.25s;
+        }
+
+        .passwordBox button:hover{
+            background:#2c8cff;
+        }
+
+        #error{
+            color:#ff5555;
+            margin-top:15px;
+            display:none;
+        }
+
+        /* ===== MAIN WEBSITE ===== */
+
+        #website{
+            display:none;
         }
 
         /* ===== Top Bar ===== */
@@ -47,8 +123,8 @@
         .logo img{
             width:42px;
             height:42px;
-            border-radius:50%;
             object-fit:cover;
+            border-radius:50%;
         }
 
         .logo h1{
@@ -118,7 +194,6 @@
             object-fit:cover;
             border-radius:10px;
             margin-bottom:15px;
-            display:block;
         }
 
         .game h3{
@@ -155,80 +230,154 @@
 
 <body>
 
-<header>
+<!-- PASSWORD SCREEN -->
 
-    <div class="logo">
-        <img src="tung-tung-tung-sahur.png" alt="Tung Tung Tung Sahur">
-        <h1>My Games</h1>
+<div id="passwordScreen">
+
+    <div class="passwordBox">
+
+        <img src="SPIRE.png" alt="SPIRE">
+
+        <h2>Enter Password</h2>
+
+        <p>Enter the password to access Tung Games.</p>
+
+        <input
+            type="password"
+            id="passwordInput"
+            placeholder="Password"
+            autocomplete="off"
+        >
+
+        <button onclick="checkPassword()">Enter</button>
+
+        <p id="error">Incorrect password!</p>
+
     </div>
 
-    <nav>
-        <a href="#">Home</a>
-        <a href="#games">Games</a>
-        <a href="#">Updates</a>
-        <a href="#">About</a>
-    </nav>
+</div>
 
-</header>
 
-<section class="hero">
+<!-- MAIN WEBSITE -->
 
-    <h2>Play My Games</h2>
+<div id="website">
 
-    <p>Select a game below.</p>
+    <header>
 
-</section>
+        <div class="logo">
+            <img src="tung-tung-tung-sahur.png" alt="Tung Tung Tung Sahur">
+            <h1>My Games</h1>
+        </div>
 
-<section class="games" id="games">
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Games</a>
+            <a href="#">Updates</a>
+            <a href="#">About</a>
+        </nav>
 
-    <div class="game">
-        <img src="game1.jpg" alt="Game 1">
-        <h3>Game 1</h3>
-        <p>Description of your first game.</p>
-        <a class="play" href="games/game1/index.html">Play</a>
-    </div>
+    </header>
 
-    <div class="game">
-        <img src="game2.jpg" alt="Game 2">
-        <h3>Game 2</h3>
-        <p>Description of your second game.</p>
-        <a class="play" href="games/game2/index.html">Play</a>
-    </div>
 
-    <div class="game">
-        <img src="game3.jpg" alt="Game 3">
-        <h3>Game 3</h3>
-        <p>Description of your third game.</p>
-        <a class="play" href="games/game3/index.html">Play</a>
-    </div>
+    <section class="hero">
 
-    <div class="game">
-        <img src="game4.jpg" alt="Game 4">
-        <h3>Game 4</h3>
-        <p>Description of your fourth game.</p>
-        <a class="play" href="games/game4/index.html">Play</a>
-    </div>
+        <h2>Play My Games</h2>
 
-    <div class="game">
-        <img src="game5.jpg" alt="Game 5">
-        <h3>Game 5</h3>
-        <p>Description of your fifth game.</p>
-        <a class="play" href="games/game5/index.html">Play</a>
-    </div>
+        <p>Select a game below.</p>
 
-    <div class="game">
-        <img src="game6.jpg" alt="Game 6">
-        <h3>Game 6</h3>
-        <p>Description of your sixth game.</p>
-        <a class="play" href="games/game6/index.html">Play</a>
-    </div>
+    </section>
 
-</section>
 
-<footer>
-    © 2026 Tung Games
-</footer>
+    <section class="games">
+
+        <div class="game">
+            <img src="images/game1.jpg" alt="Game 1">
+            <h3>Game 1</h3>
+            <p>Description of your first game.</p>
+            <a class="play" href="games/game1/index.html">Play</a>
+        </div>
+
+        <div class="game">
+            <img src="images/game2.jpg" alt="Game 2">
+            <h3>Game 2</h3>
+            <p>Description of your second game.</p>
+            <a class="play" href="games/game2/index.html">Play</a>
+        </div>
+
+        <div class="game">
+            <img src="images/game3.jpg" alt="Game 3">
+            <h3>Game 3</h3>
+            <p>Description of your third game.</p>
+            <a class="play" href="games/game3/index.html">Play</a>
+        </div>
+
+        <div class="game">
+            <img src="images/game4.jpg" alt="Game 4">
+            <h3>Game 4</h3>
+            <p>Description of your fourth game.</p>
+            <a class="play" href="games/game4/index.html">Play</a>
+        </div>
+
+        <div class="game">
+            <img src="images/game5.jpg" alt="Game 5">
+            <h3>Game 5</h3>
+            <p>Description of your fifth game.</p>
+            <a class="play" href="games/game5/index.html">Play</a>
+        </div>
+
+        <div class="game">
+            <img src="images/game6.jpg" alt="Game 6">
+            <h3>Game 6</h3>
+            <p>Description of your sixth game.</p>
+            <a class="play" href="games/game6/index.html">Play</a>
+        </div>
+
+    </section>
+
+
+    <footer>
+        © 2026 Tung Games
+    </footer>
+
+</div>
+
+
+<script>
+    function checkPassword(){
+
+        const password = document
+            .getElementById("passwordInput")
+            .value;
+
+        if(password === "TUNG"){
+
+            document
+                .getElementById("passwordScreen")
+                .style.display = "none";
+
+            document
+                .getElementById("website")
+                .style.display = "block";
+
+        } else {
+
+            document
+                .getElementById("error")
+                .style.display = "block";
+
+        }
+    }
+
+    document
+        .getElementById("passwordInput")
+        .addEventListener("keypress", function(event){
+
+            if(event.key === "Enter"){
+                checkPassword();
+            }
+
+        });
+</script>
 
 </body>
 </html>
-```

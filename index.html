@@ -1,231 +1,327 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SPIRE</title>
+```
+<title>SPIRE</title>
 
-    <!-- Tab icon -->
-    <link rel="icon" type="image/png" href="SPIRE.png">
+<!-- Tab icon -->
+<link rel="icon" type="image/png" href="SPIRE.png">
 
-    <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial, Helvetica, sans-serif;
-        }
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial, Helvetica, sans-serif;
+    }
 
-        body{
-            background:#121212;
-            color:white;
-        }
+    body{
+        background:#121212;
+        color:white;
+    }
 
-        /* ===== PASSWORD SCREEN ===== */
+    /* ===== PASSWORD SCREEN ===== */
 
-        #passwordScreen{
-            position:fixed;
-            inset:0;
-            background:#121212;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            z-index:9999;
-        }
+    #passwordScreen{
+        position:fixed;
+        inset:0;
+        background:#121212;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        z-index:9999;
+    }
 
-        .passwordBox{
-            background:#1d1d1d;
-            padding:40px;
-            border-radius:15px;
-            text-align:center;
-            width:90%;
-            max-width:400px;
-            border:2px solid #4da6ff;
-        }
+    .passwordBox{
+        background:#1d1d1d;
+        padding:40px;
+        border-radius:15px;
+        text-align:center;
+        width:90%;
+        max-width:400px;
+        border:2px solid #4da6ff;
+    }
 
-        .passwordBox img{
-            width:100px;
-            height:100px;
-            object-fit:contain;
-            margin-bottom:15px;
-        }
+    .passwordBox img{
+        width:100px;
+        height:100px;
+        object-fit:contain;
+        margin-bottom:15px;
+    }
 
-        .passwordBox h2{
-            margin-bottom:10px;
-        }
+    .passwordBox h2{
+        margin-bottom:10px;
+    }
 
-        .passwordBox p{
-            color:#bbbbbb;
-            margin-bottom:20px;
-        }
+    .passwordBox p{
+        color:#bbbbbb;
+        margin-bottom:20px;
+    }
 
-        .passwordBox input{
-            width:100%;
-            padding:14px;
-            border:none;
-            border-radius:8px;
-            margin-bottom:15px;
-            font-size:16px;
-            text-align:center;
-        }
+    .passwordBox input{
+        width:100%;
+        padding:14px;
+        border:none;
+        border-radius:8px;
+        margin-bottom:15px;
+        font-size:16px;
+        text-align:center;
+    }
 
-        .passwordBox button{
-            width:100%;
-            padding:14px;
-            border:none;
-            border-radius:8px;
-            background:#4da6ff;
-            color:white;
-            font-size:16px;
-            font-weight:bold;
-            cursor:pointer;
-            transition:.25s;
-        }
+    .passwordBox button{
+        width:100%;
+        padding:14px;
+        border:none;
+        border-radius:8px;
+        background:#4da6ff;
+        color:white;
+        font-size:16px;
+        font-weight:bold;
+        cursor:pointer;
+        transition:.25s;
+    }
 
-        .passwordBox button:hover{
-            background:#2c8cff;
-        }
+    .passwordBox button:hover{
+        background:#2c8cff;
+    }
 
-        #error{
-            color:#ff5555;
-            margin-top:15px;
-            display:none;
-        }
+    #error{
+        color:#ff5555;
+        margin-top:15px;
+        display:none;
+    }
 
-        /* ===== MAIN WEBSITE ===== */
+    /* ===== MAIN WEBSITE ===== */
 
-        #website{
-            display:none;
-        }
+    #website{
+        display:none;
+    }
 
-        /* ===== Top Bar ===== */
+    /* ===== SECRET CLOUD GAMING PAGE ===== */
+
+    #cloudGaming{
+        display:none;
+        min-height:100vh;
+        text-align:center;
+        padding:40px 20px;
+    }
+
+    .cloudHeader{
+        margin-bottom:50px;
+    }
+
+    .cloudHeader img{
+        width:100px;
+        height:100px;
+        object-fit:contain;
+        margin-bottom:20px;
+    }
+
+    .cloudHeader h1{
+        font-size:48px;
+        margin-bottom:15px;
+    }
+
+    .cloudHeader p{
+        color:#bbbbbb;
+        font-size:18px;
+    }
+
+    .cloudContent{
+        max-width:900px;
+        margin:auto;
+        background:#1d1d1d;
+        padding:40px;
+        border-radius:15px;
+        border:2px solid #4da6ff;
+    }
+
+    .cloudContent h2{
+        font-size:32px;
+        margin-bottom:20px;
+    }
+
+    .cloudContent p{
+        color:#bbbbbb;
+        line-height:1.6;
+        margin-bottom:30px;
+    }
+
+    .cloudButton{
+        display:inline-block;
+        padding:14px 25px;
+        background:#4da6ff;
+        color:white;
+        text-decoration:none;
+        border-radius:8px;
+        font-weight:bold;
+        border:none;
+        cursor:pointer;
+        font-size:16px;
+        transition:.25s;
+    }
+
+    .cloudButton:hover{
+        background:#2c8cff;
+    }
+
+    /* ===== Top Bar ===== */
+
+    header{
+        background:#1f1f1f;
+        height:70px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:0 40px;
+        position:sticky;
+        top:0;
+        box-shadow:0 3px 8px rgba(0,0,0,.4);
+        z-index:100;
+    }
+
+    .logo{
+        display:flex;
+        align-items:center;
+        gap:12px;
+    }
+
+    .logo img{
+        width:42px;
+        height:42px;
+        object-fit:cover;
+        border-radius:50%;
+    }
+
+    .logo h1{
+        font-size:28px;
+    }
+
+    nav{
+        display:flex;
+        gap:20px;
+    }
+
+    nav a{
+        text-decoration:none;
+        color:white;
+        transition:.25s;
+        font-weight:bold;
+    }
+
+    nav a:hover{
+        color:#4da6ff;
+    }
+
+    /* ===== Hero ===== */
+
+    .hero{
+        text-align:center;
+        padding:60px 20px;
+    }
+
+    .hero h2{
+        font-size:42px;
+        margin-bottom:10px;
+    }
+
+    .hero p{
+        color:#bbbbbb;
+    }
+
+    /* ===== Games Grid ===== */
+
+    .games{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+        gap:25px;
+        padding:40px;
+        max-width:1200px;
+        margin:auto;
+    }
+
+    .game{
+        background:#1d1d1d;
+        border-radius:15px;
+        padding:25px;
+        text-align:center;
+        transition:.25s;
+        border:2px solid transparent;
+    }
+
+    .game:hover{
+        transform:translateY(-8px);
+        border-color:#4da6ff;
+    }
+
+    .game img{
+        width:100%;
+        height:160px;
+        object-fit:cover;
+        border-radius:10px;
+        margin-bottom:15px;
+    }
+
+    .game h3{
+        margin-bottom:12px;
+    }
+
+    .game p{
+        color:#bbbbbb;
+        margin-bottom:20px;
+    }
+
+    .play{
+        display:inline-block;
+        padding:12px 22px;
+        background:#4da6ff;
+        color:white;
+        text-decoration:none;
+        border-radius:8px;
+        transition:.25s;
+        font-weight:bold;
+    }
+
+    .play:hover{
+        background:#2c8cff;
+    }
+
+    footer{
+        text-align:center;
+        padding:30px;
+        color:#888;
+    }
+
+    @media(max-width:700px){
 
         header{
-            background:#1f1f1f;
-            height:70px;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            padding:0 40px;
-            position:sticky;
-            top:0;
-            box-shadow:0 3px 8px rgba(0,0,0,.4);
-            z-index:100;
-        }
-
-        .logo{
-            display:flex;
-            align-items:center;
-            gap:12px;
-        }
-
-        .logo img{
-            width:42px;
-            height:42px;
-            object-fit:cover;
-            border-radius:50%;
-        }
-
-        .logo h1{
-            font-size:28px;
+            padding:0 20px;
         }
 
         nav{
-            display:flex;
-            gap:20px;
+            gap:10px;
         }
 
         nav a{
-            text-decoration:none;
-            color:white;
-            transition:.25s;
-            font-weight:bold;
+            font-size:14px;
         }
 
-        nav a:hover{
-            color:#4da6ff;
+        .logo h1{
+            font-size:22px;
         }
 
-        /* ===== Hero ===== */
-
-        .hero{
-            text-align:center;
-            padding:60px 20px;
+        .cloudHeader h1{
+            font-size:36px;
         }
 
-        .hero h2{
-            font-size:42px;
-            margin-bottom:10px;
-        }
+    }
+</style>
+```
 
-        .hero p{
-            color:#bbbbbb;
-        }
-
-        /* ===== Games Grid ===== */
-
-        .games{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-            gap:25px;
-            padding:40px;
-            max-width:1200px;
-            margin:auto;
-        }
-
-        .game{
-            background:#1d1d1d;
-            border-radius:15px;
-            padding:25px;
-            text-align:center;
-            transition:.25s;
-            border:2px solid transparent;
-        }
-
-        .game:hover{
-            transform:translateY(-8px);
-            border-color:#4da6ff;
-        }
-
-        .game img{
-            width:100%;
-            height:160px;
-            object-fit:cover;
-            border-radius:10px;
-            margin-bottom:15px;
-        }
-
-        .game h3{
-            margin-bottom:12px;
-        }
-
-        .game p{
-            color:#bbbbbb;
-            margin-bottom:20px;
-        }
-
-        .play{
-            display:inline-block;
-            padding:12px 22px;
-            background:#4da6ff;
-            color:white;
-            text-decoration:none;
-            border-radius:8px;
-            transition:.25s;
-            font-weight:bold;
-        }
-
-        .play:hover{
-            background:#2c8cff;
-        }
-
-        footer{
-            text-align:center;
-            padding:30px;
-            color:#888;
-        }
-    </style>
 </head>
 
 <body>
@@ -234,118 +330,159 @@
 
 <div id="passwordScreen">
 
-    <div class="passwordBox">
+```
+<div class="passwordBox">
 
-        <img src="tung-nobg.png" alt="tung">
+    <img src="tung-nobg.png" alt="Tung">
 
-        <h2>Enter Password</h2>
+    <h2>Enter Password</h2>
 
-        <p>Enter the password to access Tung Games.</p>
+    <p>Enter the password to access Tung Games.</p>
 
-        <input
-            type="password"
-            id="passwordInput"
-            placeholder="Password"
-            autocomplete="off"
-        >
+    <input
+        type="password"
+        id="passwordInput"
+        placeholder="Password"
+        autocomplete="off"
+    >
 
-        <button onclick="checkPassword()">Enter</button>
+    <button onclick="checkPassword()">Enter</button>
 
-        <p id="error">Incorrect password!</p>
-
-    </div>
+    <p id="error">Incorrect password!</p>
 
 </div>
+```
 
+</div>
 
 <!-- MAIN WEBSITE -->
 
 <div id="website">
 
-    <header>
+```
+<header>
 
-        <div class="logo">
-            <img src="tung-tung-tung-sahur.png" alt="Tung Tung Tung Sahur">
-            <h1>Tung Games</h1>
-        </div>
+    <div class="logo">
+        <img src="tung-tung-tung-sahur.png" alt="Tung Tung Tung Sahur">
+        <h1>Tung Games</h1>
+    </div>
 
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">Games</a>
-            <a href="#">Updates</a>
-            <a href="#">About</a>
-        </nav>
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Games</a>
+        <a href="#">Updates</a>
+        <a href="#">About</a>
+    </nav>
 
-    </header>
-
-
-    <section class="hero">
-
-        <h2>Games</h2>
-
-    </section>
+</header>
 
 
-    <section class="games">
+<section class="hero">
 
-        <div class="game">
-            <img src="images/game1.jpg" alt="Game 1">
-            <h3>Game 1</h3>
-            <p>Description of your first game.</p>
-            <a class="play" href="games/game1/index.html">Play</a>
-        </div>
+    <h2>Tung Games</h2>
 
-        <div class="game">
-            <img src="images/game2.jpg" alt="Game 2">
-            <h3>Game 2</h3>
-            <p>Description of your second game.</p>
-            <a class="play" href="games/game2/index.html">Play</a>
-        </div>
-
-        <div class="game">
-            <img src="images/game3.jpg" alt="Game 3">
-            <h3>Game 3</h3>
-            <p>Description of your third game.</p>
-            <a class="play" href="games/game3/index.html">Play</a>
-        </div>
-
-        <div class="game">
-            <img src="images/game4.jpg" alt="Game 4">
-            <h3>Game 4</h3>
-            <p>Description of your fourth game.</p>
-            <a class="play" href="games/game4/index.html">Play</a>
-        </div>
-
-        <div class="game">
-            <img src="images/game5.jpg" alt="Game 5">
-            <h3>Game 5</h3>
-            <p>Description of your fifth game.</p>
-            <a class="play" href="games/game5/index.html">Play</a>
-        </div>
-
-        <div class="game">
-            <img src="images/game6.jpg" alt="Game 6">
-            <h3>Game 6</h3>
-            <p>Description of your sixth game.</p>
-            <a class="play" href="games/game6/index.html">Play</a>
-        </div>
-
-    </section>
+</section>
 
 
-    <footer>
-        © 2026 Tung Games
-    </footer>
+<section class="games">
+
+    <div class="game">
+        <img src="images/game1.jpg" alt="Game 1">
+        <h3>Game 1</h3>
+        <p>Description of your first game.</p>
+        <a class="play" href="games/game1/index.html">Play</a>
+    </div>
+
+    <div class="game">
+        <img src="images/game2.jpg" alt="Game 2">
+        <h3>Game 2</h3>
+        <p>Description of your second game.</p>
+        <a class="play" href="games/game2/index.html">Play</a>
+    </div>
+
+    <div class="game">
+        <img src="images/game3.jpg" alt="Game 3">
+        <h3>Game 3</h3>
+        <p>Description of your third game.</p>
+        <a class="play" href="games/game3/index.html">Play</a>
+    </div>
+
+    <div class="game">
+        <img src="images/game4.jpg" alt="Game 4">
+        <h3>Game 4</h3>
+        <p>Description of your fourth game.</p>
+        <a class="play" href="games/game4/index.html">Play</a>
+    </div>
+
+    <div class="game">
+        <img src="images/game5.jpg" alt="Game 5">
+        <h3>Game 5</h3>
+        <p>Description of your fifth game.</p>
+        <a class="play" href="games/game5/index.html">Play</a>
+    </div>
+
+    <div class="game">
+        <img src="images/game6.jpg" alt="Game 6">
+        <h3>Game 6</h3>
+        <p>Description of your sixth game.</p>
+        <a class="play" href="games/game6/index.html">Play</a>
+    </div>
+
+</section>
+
+
+<footer>
+    © 2026 Tung Games
+</footer>
+```
+
+</div>
+
+<!-- SECRET CLOUD GAMING PAGE -->
+
+<div id="cloudGaming">
+
+```
+<div class="cloudHeader">
+
+    <img src="SPIRE.png" alt="SPIRE">
+
+    <h1>☁ Cloud Gaming</h1>
+
+    <p>Welcome to the secret Tung Games cloud gaming area.</p>
 
 </div>
 
 
+<div class="cloudContent">
+
+    <h2>Secret Cloud Gaming</h2>
+
+    <p>
+        You found the secret cloud gaming page!
+        Add your cloud gaming services, games, or links here.
+    </p>
+
+    <button class="cloudButton" onclick="goBack()">
+        Back to Login
+    </button>
+
+</div>
+```
+
+</div>
+
 <script>
+
     function checkPassword(){
 
         const password = document
             .getElementById("passwordInput")
             .value;
+
+        const error = document
+            .getElementById("error");
+
 
         if(password === "TUNG"){
 
@@ -357,14 +494,51 @@
                 .getElementById("website")
                 .style.display = "block";
 
-        } else {
+            error.style.display = "none";
+
+
+        } else if(password === "CLOUDGAMING"){
 
             document
-                .getElementById("error")
+                .getElementById("passwordScreen")
+                .style.display = "none";
+
+            document
+                .getElementById("cloudGaming")
                 .style.display = "block";
 
+            error.style.display = "none";
+
+
+        } else {
+
+            error.style.display = "block";
+
         }
+
     }
+
+
+    function goBack(){
+
+        document
+            .getElementById("cloudGaming")
+            .style.display = "none";
+
+        document
+            .getElementById("website")
+            .style.display = "none";
+
+        document
+            .getElementById("passwordScreen")
+            .style.display = "flex";
+
+        document
+            .getElementById("passwordInput")
+            .value = "";
+
+    }
+
 
     document
         .getElementById("passwordInput")
@@ -375,6 +549,7 @@
             }
 
         });
+
 </script>
 
 </body>

@@ -22,6 +22,7 @@
         }
 
         /* PASSWORD SCREEN */
+
         #passwordScreen {
             position: fixed;
             inset: 0;
@@ -68,7 +69,7 @@
             text-align: center;
         }
 
-        button {
+        .passwordBox button {
             width: 100%;
             padding: 14px;
             border: none;
@@ -80,7 +81,7 @@
             cursor: pointer;
         }
 
-        button:hover {
+        .passwordBox button:hover {
             background: #A9825D;
         }
 
@@ -91,6 +92,7 @@
         }
 
         /* MAIN WEBSITE */
+
         #website {
             display: none;
         }
@@ -102,6 +104,10 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 40px;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+            z-index: 100;
         }
 
         .logo {
@@ -130,6 +136,7 @@
             text-decoration: none;
             color: white;
             font-weight: bold;
+            transition: 0.25s;
         }
 
         nav a:hover {
@@ -146,6 +153,7 @@
         }
 
         /* GAMES */
+
         .games {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -161,6 +169,7 @@
             padding: 25px;
             text-align: center;
             border: 2px solid transparent;
+            transition: 0.25s;
         }
 
         .game:hover {
@@ -193,11 +202,14 @@
             text-decoration: none;
             border-radius: 8px;
             font-weight: bold;
+            transition: 0.25s;
         }
 
         .play:hover {
             background: #A9825D;
         }
+
+        /* COPYRIGHT */
 
         footer {
             text-align: center;
@@ -205,7 +217,19 @@
             color: #888;
         }
 
+        .secretLink {
+            color: #888;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .secretLink:hover {
+            color: #C8A27A;
+        }
+
         /* SECRET CLOUD GAMING PAGE */
+
         #cloudGaming {
             display: none;
             min-height: 100vh;
@@ -231,6 +255,7 @@
 
         .cloudHeader p {
             color: #bbbbbb;
+            font-size: 18px;
         }
 
         .cloudContent {
@@ -243,17 +268,30 @@
         }
 
         .cloudContent h2 {
+            font-size: 32px;
             margin-bottom: 20px;
         }
 
         .cloudContent p {
             color: #bbbbbb;
+            line-height: 1.6;
             margin-bottom: 30px;
         }
 
         .cloudButton {
-            width: auto;
             padding: 14px 25px;
+            background: #C8A27A;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.25s;
+        }
+
+        .cloudButton:hover {
+            background: #A9825D;
         }
 
         @media (max-width: 700px) {
@@ -268,6 +306,14 @@
             nav a {
                 font-size: 14px;
             }
+
+            .logo h1 {
+                font-size: 22px;
+            }
+
+            .cloudHeader h1 {
+                font-size: 36px;
+            }
         }
     </style>
 </head>
@@ -275,7 +321,9 @@
 <body>
 
     <!-- PASSWORD SCREEN -->
+
     <div id="passwordScreen">
+
         <div class="passwordBox">
 
             <img src="tung-nobg.png" alt="Tung">
@@ -296,13 +344,16 @@
             <p id="error">Incorrect password!</p>
 
         </div>
+
     </div>
 
 
     <!-- MAIN WEBSITE -->
+
     <div id="website">
 
         <header>
+
             <div class="logo">
                 <img src="tung-tung-tung-sahur.png" alt="Tung Tung Tung Sahur">
                 <h1>Tung Games</h1>
@@ -314,11 +365,14 @@
                 <a href="#">Updates</a>
                 <a href="#">About</a>
             </nav>
+
         </header>
+
 
         <section class="hero">
             <h2>Tung Games</h2>
         </section>
+
 
         <section class="games">
 
@@ -366,23 +420,30 @@
 
         </section>
 
+
         <footer>
-            © 2026 Tung Games
+            <a href="#" class="secretLink" onclick="openCloudGaming(event)">
+                © 2026 Tung Games
+            </a>
         </footer>
 
     </div>
 
 
     <!-- SECRET CLOUD GAMING PAGE -->
+
     <div id="cloudGaming">
 
         <div class="cloudHeader">
+
             <img src="SPIRE.png" alt="SPIRE">
 
             <h1>☁ Cloud Gaming</h1>
 
             <p>Welcome to the secret Tung Games cloud gaming area.</p>
+
         </div>
+
 
         <div class="cloudContent">
 
@@ -394,7 +455,7 @@
             </p>
 
             <button class="cloudButton" onclick="goBack()">
-                Back to Login
+                Back to Tung Games
             </button>
 
         </div>
@@ -403,40 +464,63 @@
 
 
     <script>
+
         function checkPassword() {
-            const password = document.getElementById("passwordInput").value;
-            const error = document.getElementById("error");
+
+            const password =
+                document.getElementById("passwordInput").value;
+
+            const error =
+                document.getElementById("error");
 
             if (password === "TUNG") {
-                document.getElementById("passwordScreen").style.display = "none";
-                document.getElementById("website").style.display = "block";
-                error.style.display = "none";
 
-            } else if (password === "CLOUDGAMING") {
                 document.getElementById("passwordScreen").style.display = "none";
-                document.getElementById("cloudGaming").style.display = "block";
+
+                document.getElementById("website").style.display = "block";
+
                 error.style.display = "none";
 
             } else {
+
                 error.style.display = "block";
+
             }
         }
 
-        function goBack() {
-            document.getElementById("cloudGaming").style.display = "none";
+
+        function openCloudGaming(event) {
+
+            event.preventDefault();
+
             document.getElementById("website").style.display = "none";
-            document.getElementById("passwordScreen").style.display = "flex";
-            document.getElementById("passwordInput").value = "";
-            document.getElementById("error").style.display = "none";
+
+            document.getElementById("cloudGaming").style.display = "block";
+
+            window.scrollTo(0, 0);
         }
+
+
+        function goBack() {
+
+            document.getElementById("cloudGaming").style.display = "none";
+
+            document.getElementById("website").style.display = "block";
+
+            window.scrollTo(0, 0);
+        }
+
 
         document
             .getElementById("passwordInput")
             .addEventListener("keydown", function(event) {
+
                 if (event.key === "Enter") {
                     checkPassword();
                 }
+
             });
+
     </script>
 
 </body>

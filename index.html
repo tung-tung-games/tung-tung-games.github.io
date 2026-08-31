@@ -228,6 +228,13 @@
             color: #C8A27A;
         }
 
+        /* ALL GAMES PAGE */
+
+        #gamesPage {
+            display: none;
+            min-height: 100vh;
+        }
+
         /* SECRET CLOUD GAMING PAGE */
 
         #cloudGaming {
@@ -295,6 +302,7 @@
         }
 
         @media (max-width: 700px) {
+
             header {
                 padding: 0 20px;
             }
@@ -360,8 +368,8 @@
             </div>
 
             <nav>
-                <a href="#">Home</a>
-                <a href="#">Games</a>
+                <a href="#" onclick="showHome(event)">Home</a>
+                <a href="#" onclick="showGames(event)">Games</a>
             </nav>
 
         </header>
@@ -372,50 +380,10 @@
         </section>
 
 
-        <section class="games">
+        <!-- TOP 5 MOST POPULAR GAMES -->
 
-            <div class="game">
-                <img src="images/game1.jpg" alt="Game 1">
-                <h3>Game 1</h3>
-                <p>Description of your first game.</p>
-                <a class="play" href="games/game1/index.html">Play</a>
-            </div>
-
-            <div class="game">
-                <img src="images/game2.jpg" alt="Game 2">
-                <h3>Game 2</h3>
-                <p>Description of your second game.</p>
-                <a class="play" href="games/game2/index.html">Play</a>
-            </div>
-
-            <div class="game">
-                <img src="images/game3.jpg" alt="Game 3">
-                <h3>Game 3</h3>
-                <p>Description of your third game.</p>
-                <a class="play" href="games/game3/index.html">Play</a>
-            </div>
-
-            <div class="game">
-                <img src="images/game4.jpg" alt="Game 4">
-                <h3>Game 4</h3>
-                <p>Description of your fourth game.</p>
-                <a class="play" href="games/game4/index.html">Play</a>
-            </div>
-
-            <div class="game">
-                <img src="images/game5.jpg" alt="Game 5">
-                <h3>Game 5</h3>
-                <p>Description of your fifth game.</p>
-                <a class="play" href="games/game5/index.html">Play</a>
-            </div>
-
-            <div class="game">
-                <img src="images/game6.jpg" alt="Game 6">
-                <h3>Game 6</h3>
-                <p>Description of your sixth game.</p>
-                <a class="play" href="games/game6/index.html">Play</a>
-            </div>
-
+        <section class="games" id="gameList">
+            <!-- Automatically filled with the 5 most popular games -->
         </section>
 
 
@@ -424,6 +392,21 @@
                 © 2026 Tung Games
             </a>
         </footer>
+
+    </div>
+
+
+    <!-- ALL GAMES PAGE -->
+
+    <div id="gamesPage">
+
+        <section class="hero">
+            <h2>All Games</h2>
+        </section>
+
+        <section class="games" id="allGameList">
+            <!-- All 50 games appear here -->
+        </section>
 
     </div>
 
@@ -444,6 +427,8 @@
 
             <h2>Cloud Gaming</h2>
 
+            <p>
+                Welcome to Tung Cloud Gaming.
             </p>
 
             <button class="cloudButton" onclick="goBack()">
@@ -457,61 +442,364 @@
 
     <script>
 
+        /*
+         * GAME FILE SETUP
+         *
+         * Game 1:
+         * 1.html
+         * 1.png
+         *
+         * Game 2:
+         * 2.html
+         * 2.png
+         *
+         * ...
+         *
+         * Game 50:
+         * 50.html
+         * 50.png
+         *
+         * All files should be in the SAME folder
+         * as this main HTML file.
+         */
+
+
+        const GAME_COUNT = 50;
+
+
+        /* CREATE A GAME CARD */
+
+        function gameCard(number) {
+
+            return `
+                <div class="game">
+
+                    <img src="${number}.png" alt="Game ${number}">
+
+                    <h3>Game ${number}</h3>
+
+                    <p>Game ${number}</p>
+
+                    <a
+                        class="play"
+                        href="${number}.html"
+                        onclick="recordVisit(${number})"
+                    >
+                        Play
+                    </a>
+
+                </div>
+            `;
+
+        }
+
+
+        /* GET TODAY'S DATE */
+
+        function getTodayKey() {
+
+            const now = new Date();
+
+            return now.getFullYear() + "-" +
+                String(now.getMonth() + 1).padStart(2, "0") + "-" +
+                String(now.getDate()).padStart(2, "0");
+
+        }
+
+
+        /* GET POPULARITY DATA */
+
+        function getPopularity() {
+
+            const today = getTodayKey();
+
+            const saved = JSON.parse(
+                localStorage.getItem("tungGamePopularity") || "{}"
+            );
+
+
+            /*
+             * If the date has changed,
+             * start a completely new popularity list.
+             */
+
+            if (saved.date !== today) {
+
+                return {
+                    date: today,
+                    visits: {}
+                };
+
+            }
+
+
+            return saved;
+
+        }
+
+
+        /* RECORD A GAME VISIT */
+
+        function recordVisit(number) {
+
+            const popularity = getPopularity();
+
+            popularity.visits[number] =
+                (popularity.visits[number] || 0) + 1;
+
+
+            localStorage.setItem(
+                "tungGamePopularity",
+                JSON.stringify(popularity)
+            );
+
+        }
+
+
+        /* SORT GAMES BY POPULARITY */
+
+        function getPopularGames() {
+
+            const popularity = getPopularity();
+
+
+            const games = Array.from(
+                { length: GAME_COUNT },
+                (_, index) => index + 1
+            );
+
+
+            games.sort((a, b) => {
+
+                const visitsA =
+                    popularity.visits[a] || 0;
+
+                const visitsB =
+                    popularity.visits[b] || 0;
+
+
+                /* Most visits first */
+
+                if (visitsB !== visitsA) {
+
+                    return visitsB - visitsA;
+
+                }
+
+
+                /* If tied, lower game number first */
+
+                return a - b;
+
+            });
+
+
+            return games;
+
+        }
+
+
+        /* SHOW ONLY THE TOP 5 ON HOME */
+
+        function renderHomeGames() {
+
+            const list =
+                document.getElementById("gameList");
+
+
+            const popularGames =
+                getPopularGames().slice(0, 5);
+
+
+            list.innerHTML =
+                popularGames
+                    .map(number => gameCard(number))
+                    .join("");
+
+        }
+
+
+        /* SHOW ALL 50 GAMES */
+
+        function renderAllGames() {
+
+            const list =
+                document.getElementById("allGameList");
+
+
+            list.innerHTML =
+                Array.from(
+                    { length: GAME_COUNT },
+                    (_, index) => gameCard(index + 1)
+                ).join("");
+
+        }
+
+
+        /* HOME BUTTON */
+
+        function showHome(event) {
+
+            if (event) {
+                event.preventDefault();
+            }
+
+
+            document.getElementById("website")
+                .style.display = "block";
+
+            document.getElementById("gamesPage")
+                .style.display = "none";
+
+            document.getElementById("cloudGaming")
+                .style.display = "none";
+
+
+            renderHomeGames();
+
+
+            window.scrollTo(0, 0);
+
+        }
+
+
+        /* GAMES BUTTON */
+
+        function showGames(event) {
+
+            if (event) {
+                event.preventDefault();
+            }
+
+
+            document.getElementById("website")
+                .style.display = "none";
+
+            document.getElementById("gamesPage")
+                .style.display = "block";
+
+            document.getElementById("cloudGaming")
+                .style.display = "none";
+
+
+            renderAllGames();
+
+
+            window.scrollTo(0, 0);
+
+        }
+
+
+        /* PASSWORD */
+
         function checkPassword() {
 
             const password =
                 document.getElementById("passwordInput").value;
 
+
             const error =
                 document.getElementById("error");
 
+
             if (password === "TUNG") {
 
-                document.getElementById("passwordScreen").style.display = "none";
+                document.getElementById("passwordScreen")
+                    .style.display = "none";
 
-                document.getElementById("website").style.display = "block";
+
+                document.getElementById("website")
+                    .style.display = "block";
+
+
+                document.getElementById("gamesPage")
+                    .style.display = "none";
+
+
+                document.getElementById("cloudGaming")
+                    .style.display = "none";
+
 
                 error.style.display = "none";
 
-            } else {
+
+                renderHomeGames();
+
+            }
+
+            else {
 
                 error.style.display = "block";
 
             }
+
         }
 
+
+        /* CLOUD GAMING */
 
         function openCloudGaming(event) {
 
             event.preventDefault();
 
-            document.getElementById("website").style.display = "none";
 
-            document.getElementById("cloudGaming").style.display = "block";
+            document.getElementById("website")
+                .style.display = "none";
+
+
+            document.getElementById("gamesPage")
+                .style.display = "none";
+
+
+            document.getElementById("cloudGaming")
+                .style.display = "block";
+
 
             window.scrollTo(0, 0);
+
         }
 
+
+        /* BACK FROM CLOUD GAMING */
 
         function goBack() {
 
-            document.getElementById("cloudGaming").style.display = "none";
+            document.getElementById("cloudGaming")
+                .style.display = "none";
 
-            document.getElementById("website").style.display = "block";
+
+            document.getElementById("gamesPage")
+                .style.display = "none";
+
+
+            document.getElementById("website")
+                .style.display = "block";
+
+
+            renderHomeGames();
+
 
             window.scrollTo(0, 0);
+
         }
 
 
+        /* ENTER KEY FOR PASSWORD */
+
         document
             .getElementById("passwordInput")
-            .addEventListener("keydown", function(event) {
+            .addEventListener(
+                "keydown",
+                function(event) {
 
-                if (event.key === "Enter") {
-                    checkPassword();
+                    if (event.key === "Enter") {
+
+                        checkPassword();
+
+                    }
+
                 }
-
-            });
+            );
 
     </script>
 

@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>SPIRE</title>
-
 <link rel="icon" type="image/png" href="SPIRE.png">
 
 <style>
@@ -166,7 +164,7 @@ header {
     font-size: 28px;
 }
 
-/* TOP BAR BUTTONS */
+/* TOP BAR */
 
 nav {
     display: flex;
@@ -222,10 +220,14 @@ nav {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 25px;
-    perspective: 1200px;
 }
 
-/* WHOLE GAME TILE */
+/*
+    GAME TILE
+
+    The entire tile uses the same cursor-following
+    movement style as the top navigation buttons.
+*/
 
 .game {
     position: relative;
@@ -235,20 +237,33 @@ nav {
     border: 1px solid rgba(255,255,255,.035);
     border-radius: 17px;
     box-shadow: 0 8px 25px rgba(0,0,0,.2);
+
     will-change: transform;
-    transform: translate3d(0,0,0) rotate(0deg) scale(1);
+
+    transform:
+        translate3d(0,0,0)
+        rotate(0deg);
+
     transition:
         border-color .25s ease,
         box-shadow .25s ease;
-    animation: cardIn .55s ease both;
 }
 
 .game:hover {
     border-color: rgba(200,162,122,.45);
+
     box-shadow:
         0 22px 45px rgba(0,0,0,.35),
         0 0 28px rgba(200,162,122,.07);
 }
+
+/*
+    IMPORTANT:
+    The transform is on .game itself.
+
+    This means the image, title, description
+    and Play button all move together as one tile.
+*/
 
 .game img {
     width: 100%;
@@ -256,11 +271,6 @@ nav {
     object-fit: cover;
     border-radius: 11px;
     margin-bottom: 16px;
-    transition: transform .25s ease;
-}
-
-.game:hover img {
-    transform: scale(1.03);
 }
 
 .game h3 {
@@ -300,7 +310,7 @@ footer {
 }
 
 .secretLink {
-    color: #777777;
+    color: #777;
     text-decoration: none;
     transition: .3s ease;
 }
@@ -423,20 +433,8 @@ footer {
     }
 }
 
-@keyframes cardIn {
-    from {
-        opacity: 0;
-        transform: translateY(18px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 @keyframes float {
-    0%,100% {
+    0%, 100% {
         transform: translateY(0);
     }
 
@@ -446,7 +444,7 @@ footer {
 }
 
 @keyframes shake {
-    0%,100% {
+    0%, 100% {
         transform: translateX(0);
     }
 
@@ -503,7 +501,7 @@ footer {
 
 <body>
 
-<!-- PASSWORD -->
+<!-- PASSWORD SCREEN -->
 
 <div id="passwordScreen">
 
@@ -655,7 +653,7 @@ function gameCard(number) {
     const name = getGameName(number);
 
     return `
-        <div class="game jellyGame">
+        <div class="game">
 
             <img
                 src="${number}.png"
@@ -732,7 +730,7 @@ function recordVisit(number) {
     );
 }
 
-/* POPULAR GAMES */
+/* SORT POPULARITY */
 
 function getPopularGames() {
 
@@ -743,7 +741,7 @@ function getPopularGames() {
         (_, index) => index + 1
     );
 
-    games.sort((a,b) => {
+    games.sort((a, b) => {
 
         const visitsA =
             popularity.visits[a] || 0;
@@ -761,7 +759,7 @@ function getPopularGames() {
     return games;
 }
 
-/* HOME = TOP 8 */
+/* HOME - TOP 8 */
 
 function renderHomeGames() {
 
@@ -774,7 +772,7 @@ function renderHomeGames() {
             .map(number => gameCard(number))
             .join("");
 
-    addJellyGameEffects();
+    addGameJelly();
 }
 
 /* ALL 100 GAMES */
@@ -790,15 +788,115 @@ function renderAllGames() {
             (_, index) => gameCard(index + 1)
         ).join("");
 
-    addJellyGameEffects();
+    addGameJelly();
 }
 
-/* TOP BAR JELLY */
+/*
+    SAME STYLE AS THE TOPBAR
+
+    The whole game tile follows the cursor.
+    The image is inside the tile, so it moves
+    with the tile rather than independently.
+*/
+
+function addGameJelly() {
+
+    document.querySelectorAll(".game").forEach(game => {
+
+        let x = 0;
+        let y = 0;
+
+        let targetX = 0;
+        let targetY = 0;
+
+        let velocityX = 0;
+        let velocityY = 0;
+
+        let hovering = false;
+
+        game.addEventListener("mouseenter", () => {
+            hovering = true;
+        });
+
+        game.addEventListener("mousemove", event => {
+
+            hovering = true;
+
+            const rect =
+                game.getBoundingClientRect();
+
+            const mouseX =
+                event.clientX - rect.left;
+
+            const mouseY =
+                event.clientY - rect.top;
+
+            const centerX =
+                rect.width / 2;
+
+            const centerY =
+                rect.height / 2;
+
+            /*
+                Cursor position controls the
+                direction of the WHOLE tile.
+            */
+
+            targetX =
+                ((mouseX - centerX) / centerX) * 12;
+
+            targetY =
+                ((mouseY - centerY) / centerY) * 9;
+        });
+
+        game.addEventListener("mouseleave", () => {
+
+            hovering = false;
+
+            targetX = 0;
+            targetY = 0;
+        });
+
+        function animate() {
+
+            velocityX +=
+                (targetX - x) * 0.15;
+
+            velocityY +=
+                (targetY - y) * 0.15;
+
+            velocityX *= 0.72;
+            velocityY *= 0.72;
+
+            x += velocityX;
+            y += velocityY;
+
+            /*
+                The movement creates the slight
+                jelly-like rotation from the
+                direction the cursor moves.
+            */
+
+            const rotation =
+                (velocityX - velocityY) * 0.45;
+
+            game.style.transform =
+                `translate3d(${x}px, ${y}px, 0)
+                 rotate(${rotation}deg)`;
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    });
+}
+
+/* TOP BAR */
 
 document.querySelectorAll(".navButton").forEach(button => {
 
-    let currentX = 0;
-    let currentY = 0;
+    let x = 0;
+    let y = 0;
 
     let targetX = 0;
     let targetY = 0;
@@ -829,142 +927,29 @@ document.querySelectorAll(".navButton").forEach(button => {
     function animate() {
 
         velocityX +=
-            (targetX - currentX) * .16;
+            (targetX - x) * .16;
 
         velocityY +=
-            (targetY - currentY) * .16;
+            (targetY - y) * .16;
 
         velocityX *= .72;
         velocityY *= .72;
 
-        currentX += velocityX;
-        currentY += velocityY;
+        x += velocityX;
+        y += velocityY;
 
         const rotation =
             (velocityX - velocityY) * .65;
 
         button.style.transform =
-            `translate3d(
-                ${currentX}px,
-                ${currentY}px,
-                0
-            ) rotate(${rotation}deg)`;
+            `translate3d(${x}px, ${y}px, 0)
+             rotate(${rotation}deg)`;
 
         requestAnimationFrame(animate);
     }
 
     animate();
 });
-
-/* WHOLE TILE + IMAGE JELLY */
-
-function addJellyGameEffects() {
-
-    document
-        .querySelectorAll(".jellyGame")
-        .forEach(game => {
-
-        let currentX = 0;
-        let currentY = 0;
-
-        let targetX = 0;
-        let targetY = 0;
-
-        let velocityX = 0;
-        let velocityY = 0;
-
-        game.addEventListener(
-            "mousemove",
-            event => {
-
-                const rect =
-                    game.getBoundingClientRect();
-
-                const x =
-                    event.clientX - rect.left;
-
-                const y =
-                    event.clientY - rect.top;
-
-                const centerX =
-                    rect.width / 2;
-
-                const centerY =
-                    rect.height / 2;
-
-                targetX =
-                    ((x - centerX) / centerX) * 18;
-
-                targetY =
-                    ((y - centerY) / centerY) * 14;
-            }
-        );
-
-        game.addEventListener(
-            "mouseleave",
-            () => {
-
-                targetX = 0;
-                targetY = 0;
-            }
-        );
-
-        function animateGame() {
-
-            velocityX +=
-                (targetX - currentX) * .12;
-
-            velocityY +=
-                (targetY - currentY) * .12;
-
-            velocityX *= .78;
-            velocityY *= .78;
-
-            currentX += velocityX;
-            currentY += velocityY;
-
-            const rotation =
-                (velocityX - velocityY) * .45;
-
-            const speed =
-                Math.sqrt(
-                    velocityX * velocityX +
-                    velocityY * velocityY
-                );
-
-            const stretch =
-                Math.min(
-                    .035,
-                    speed * .0018
-                );
-
-            /*
-             * THE ENTIRE TILE MOVES.
-             * IMAGE, TEXT AND BUTTON ALL MOVE
-             * TOGETHER BECAUSE THE TRANSFORM IS
-             * APPLIED TO .game.
-             */
-
-            game.style.transform =
-                `translate3d(
-                    ${currentX}px,
-                    ${currentY}px,
-                    0
-                )
-                rotate(${rotation}deg)
-                scale(
-                    ${1 + stretch},
-                    ${1 - stretch * .45}
-                )`;
-
-            requestAnimationFrame(
-                animateGame
-            );
-        }
-
-        animateGame();
-    });
-}
 
 /* HOME */
 
@@ -983,7 +968,7 @@ function showHome(event) {
 
     renderHomeGames();
 
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 }
 
 /* GAMES */
@@ -1003,7 +988,7 @@ function showGames(event) {
 
     renderAllGames();
 
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 }
 
 /* PASSWORD */
@@ -1011,8 +996,7 @@ function showGames(event) {
 function checkPassword() {
 
     const password =
-        document.getElementById("passwordInput")
-            .value;
+        document.getElementById("passwordInput").value;
 
     const error =
         document.getElementById("passwordError");
@@ -1057,7 +1041,7 @@ function openCloudGaming(event) {
     document.getElementById("cloudGaming")
         .style.display = "block";
 
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 }
 
 /* BACK */
@@ -1075,10 +1059,10 @@ function goBack() {
 
     renderHomeGames();
 
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 }
 
-/* ENTER PASSWORD WITH ENTER KEY */
+/* ENTER KEY */
 
 document
     .getElementById("passwordInput")

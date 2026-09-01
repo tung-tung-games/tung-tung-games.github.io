@@ -29,12 +29,12 @@ html {
 
 body {
     background: #121212;
-    color: var(--text);
+    color: white;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
-/* PASSWORD */
+/* PASSWORD SCREEN */
 
 #passwordScreen {
     position: fixed;
@@ -81,20 +81,24 @@ body {
 .passwordBox input {
     width: 100%;
     padding: 14px;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     border-radius: 9px;
     outline: none;
-    background: #101010;
-    color: white;
+    background: white;
+    color: #111;
     font-size: 16px;
     text-align: center;
     margin-bottom: 14px;
     transition: 0.25s ease;
 }
 
+.passwordBox input::placeholder {
+    color: #777;
+}
+
 .passwordBox input:focus {
-    border-color: rgba(200,162,122,0.7);
-    box-shadow: 0 0 18px rgba(200,162,122,0.12);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(200,162,122,0.18);
 }
 
 .passwordBox button {
@@ -187,7 +191,6 @@ nav a:hover {
 .hero {
     text-align: center;
     padding: 65px 20px 35px;
-    position: relative;
 }
 
 .hero h2 {
@@ -224,7 +227,7 @@ nav a:hover {
     animation: cardIn 0.55s ease both;
 }
 
-/* MOVING BORDER / LINES BELOW BUTTON */
+/* EXPANDING LINE BELOW BUTTON */
 
 .game::after {
     content: "";
@@ -754,6 +757,7 @@ function addTiltEffects() {
             card.style.transform =
                 "perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)";
         });
+
     });
 }
 

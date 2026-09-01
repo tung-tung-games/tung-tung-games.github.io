@@ -169,8 +169,6 @@ header {
     font-size: 28px;
 }
 
-/* TOPBAR BUTTONS */
-
 nav {
     display: flex;
     align-items: center;
@@ -191,45 +189,17 @@ nav {
     background: rgba(255,255,255,0.035);
     border: 1px solid rgba(255,255,255,0.045);
     cursor: pointer;
-
-    /*
-       The transform is controlled by JavaScript.
-       This gives the button the jelly-like movement.
-    */
     transform: translate3d(0,0,0) rotate(0deg) scale(1);
-
     transition:
-        transform 0.16s cubic-bezier(.2,1.5,.4,1),
         background 0.25s ease,
         border-color 0.25s ease,
         box-shadow 0.25s ease;
-}
-
-.navButton::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    border-radius: 5px;
-    background: var(--accent);
-    transform: translateX(-50%);
-    opacity: 0;
-    transition:
-        width 0.35s ease,
-        opacity 0.35s ease;
 }
 
 .navButton:hover {
     background: rgba(200,162,122,0.12);
     border-color: rgba(200,162,122,0.35);
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
-
-.navButton:hover::after {
-    width: 65%;
-    opacity: 1;
 }
 
 /* HERO */
@@ -254,7 +224,6 @@ nav {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 25px;
-    perspective: 1200px;
 }
 
 .game {
@@ -265,33 +234,10 @@ nav {
     border: 1px solid rgba(255,255,255,0.035);
     border-radius: 17px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    transform-style: preserve-3d;
     transition:
-        transform 0.08s ease-out,
         border-color 0.3s ease,
         box-shadow 0.3s ease;
     animation: cardIn 0.55s ease both;
-}
-
-.game::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    width: 0;
-    height: 2px;
-    transform: translateX(-50%);
-    background: var(--accent);
-    box-shadow: 0 0 12px rgba(200,162,122,0.35);
-    transition:
-        width 0.45s ease,
-        opacity 0.45s ease;
-    opacity: 0;
-}
-
-.game:hover::after {
-    width: 75%;
-    opacity: 1;
 }
 
 .game:hover {
@@ -308,36 +254,38 @@ nav {
     border-radius: 11px;
     margin-bottom: 16px;
     transition: 0.25s ease;
-    transform: translateZ(20px);
 }
 
 .game:hover img {
-    transform: translateZ(30px) scale(1.04);
+    transform: scale(1.03);
 }
 
 .game h3 {
     margin-bottom: 10px;
     font-size: 20px;
-    transform: translateZ(15px);
 }
 
 .game p {
     color: var(--secondary);
     margin-bottom: 20px;
     font-size: 14px;
-    transform: translateZ(12px);
 }
+
+/* GAME BUTTON */
 
 .play {
     display: inline-block;
+    position: relative;
     padding: 12px 23px;
     background: var(--accent);
     color: white;
     text-decoration: none;
     border-radius: 8px;
     font-weight: bold;
-    transform: translateZ(25px);
-    transition: 0.25s ease;
+    transform: translate3d(0,0,0) rotate(0deg) scale(1);
+    transition:
+        background 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 .play:hover {
@@ -426,7 +374,6 @@ footer {
 
 .cloudButton:hover {
     background: var(--accent-dark);
-    transform: translateY(-2px);
 }
 
 /* ANIMATIONS */
@@ -662,7 +609,7 @@ function gameCard(number) {
             <h3>${name}</h3>
             <p>${name}</p>
             <a
-                class="play"
+                class="play jellyButton"
                 href="${number}.html"
                 onclick="recordVisit(${number})"
             >Play</a>
@@ -752,7 +699,7 @@ function renderHomeGames() {
             .map(number => gameCard(number))
             .join("");
 
-    addTiltEffects();
+    addJellyButtons();
 }
 
 function renderAllGames() {
@@ -765,18 +712,33 @@ function renderAllGames() {
             (_, index) => gameCard(index + 1)
         ).join("");
 
-    addTiltEffects();
+    addJellyButtons();
 }
 
-function addTiltEffects() {
+/* JELLY GAME BUTTONS */
 
-    const cards = document.querySelectorAll(".game");
+function addJellyButtons() {
 
-    cards.forEach(card => {
+    document.querySelectorAll(".jellyButton").forEach(button => {
 
-        card.addEventListener("mousemove", event => {
+        let currentX = 0;
+        let currentY = 0;
 
-            const rect = card.getBoundingClientRect();
+        let targetX = 0;
+        let targetY = 0;
+
+        let velocityX = 0;
+        let velocityY = 0;
+
+        let inside = false;
+
+        button.addEventListener("mouseenter", () => {
+            inside = true;
+        });
+
+        button.addEventListener("mousemove", event => {
+
+            const rect = button.getBoundingClientRect();
 
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
@@ -784,98 +746,65 @@ function addTiltEffects() {
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
 
-            const rotateY =
-                ((x - centerX) / centerX) * 10;
+            targetX =
+                ((x - centerX) / centerX) * 16;
 
-            const rotateX =
-                ((centerY - y) / centerY) * 10;
-
-            card.style.transform =
-                `perspective(900px)
-                 rotateX(${rotateX}deg)
-                 rotateY(${rotateY}deg)
-                 translateY(-7px)
-                 scale(1.02)`;
+            targetY =
+                ((y - centerY) / centerY) * 11;
         });
 
-        card.addEventListener("mouseleave", () => {
+        button.addEventListener("mouseleave", () => {
 
-            card.style.transform =
-                "perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)";
+            inside = false;
+
+            targetX = 0;
+            targetY = 0;
         });
+
+        function animate() {
+
+            const spring = inside ? 0.16 : 0.10;
+            const friction = 0.72;
+
+            velocityX +=
+                (targetX - currentX) * spring;
+
+            velocityY +=
+                (targetY - currentY) * spring;
+
+            velocityX *= friction;
+            velocityY *= friction;
+
+            currentX += velocityX;
+            currentY += velocityY;
+
+            const rotation =
+                (velocityX - velocityY) * 0.65;
+
+            const stretch =
+                Math.min(
+                    0.045,
+                    (Math.abs(velocityX) +
+                     Math.abs(velocityY)) * 0.002
+                );
+
+            const scaleX =
+                1 + stretch;
+
+            const scaleY =
+                1 - stretch * 0.55;
+
+            button.style.transform =
+                `translate3d(${currentX}px, ${currentY}px, 0)
+                 rotate(${rotation}deg)
+                 scale(${scaleX}, ${scaleY})`;
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
     });
 }
-
-/* JELLY TOPBAR BUTTONS */
-
-document.querySelectorAll(".navButton").forEach(button => {
-
-    let currentX = 0;
-    let currentY = 0;
-    let targetX = 0;
-    let targetY = 0;
-    let velocityX = 0;
-    let velocityY = 0;
-
-    button.addEventListener("mouseenter", () => {
-
-        button.style.transition =
-            "background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease";
-    });
-
-    button.addEventListener("mousemove", event => {
-
-        const rect = button.getBoundingClientRect();
-
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        targetX = ((x - centerX) / centerX) * 12;
-        targetY = ((y - centerY) / centerY) * 8;
-    });
-
-    button.addEventListener("mouseleave", () => {
-
-        targetX = 0;
-        targetY = 0;
-    });
-
-    function animateJelly() {
-
-        const spring = 0.13;
-        const friction = 0.72;
-
-        velocityX += (targetX - currentX) * spring;
-        velocityY += (targetY - currentY) * spring;
-
-        velocityX *= friction;
-        velocityY *= friction;
-
-        currentX += velocityX;
-        currentY += velocityY;
-
-        const rotation =
-            (velocityX - velocityY) * 0.7;
-
-        const scale =
-            1 + Math.min(
-                0.035,
-                (Math.abs(velocityX) + Math.abs(velocityY)) * 0.002
-            );
-
-        button.style.transform =
-            `translate3d(${currentX}px, ${currentY}px, 0)
-             rotate(${rotation}deg)
-             scale(${scale})`;
-
-        requestAnimationFrame(animateJelly);
-    }
-
-    animateJelly();
-});
 
 function showHome(event) {
 

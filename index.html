@@ -28,13 +28,13 @@ html {
 }
 
 body {
-    background: #121212;
-    color: white;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
 }
 
-/* PASSWORD SCREEN */
+/* PASSWORD */
 
 #passwordScreen {
     position: fixed;
@@ -42,7 +42,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #121212;
+    background: var(--bg);
     z-index: 9999;
     animation: fadeIn 0.6s ease;
 }
@@ -52,7 +52,7 @@ body {
     max-width: 400px;
     padding: 42px;
     text-align: center;
-    background: #1d1d1d;
+    background: var(--card);
     border: 1px solid rgba(200,162,122,0.45);
     border-radius: 20px;
     box-shadow: 0 25px 70px rgba(0,0,0,0.55);
@@ -116,7 +116,6 @@ body {
 
 .passwordBox button:hover {
     background: var(--accent-dark);
-    transform: translateY(-2px);
 }
 
 #passwordError {
@@ -142,7 +141,7 @@ header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(31,31,31,0.94);
+    background: rgba(31,31,31,0.96);
     border-bottom: 1px solid rgba(255,255,255,0.025);
     box-shadow: 0 5px 20px rgba(0,0,0,0.35);
     backdrop-filter: blur(12px);
@@ -170,20 +169,67 @@ header {
     font-size: 28px;
 }
 
+/* TOPBAR BUTTONS */
+
 nav {
     display: flex;
-    gap: 25px;
+    align-items: center;
+    gap: 10px;
 }
 
-nav a {
-    color: #dddddd;
+.navButton {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 82px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    color: white;
     text-decoration: none;
     font-weight: bold;
-    transition: 0.25s ease;
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.045);
+    cursor: pointer;
+
+    /*
+       The transform is controlled by JavaScript.
+       This gives the button the jelly-like movement.
+    */
+    transform: translate3d(0,0,0) rotate(0deg) scale(1);
+
+    transition:
+        transform 0.16s cubic-bezier(.2,1.5,.4,1),
+        background 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
-nav a:hover {
-    color: var(--accent);
+.navButton::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    border-radius: 5px;
+    background: var(--accent);
+    transform: translateX(-50%);
+    opacity: 0;
+    transition:
+        width 0.35s ease,
+        opacity 0.35s ease;
+}
+
+.navButton:hover {
+    background: rgba(200,162,122,0.12);
+    border-color: rgba(200,162,122,0.35);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.navButton:hover::after {
+    width: 65%;
+    opacity: 1;
 }
 
 /* HERO */
@@ -226,8 +272,6 @@ nav a:hover {
         box-shadow 0.3s ease;
     animation: cardIn 0.55s ease both;
 }
-
-/* EXPANDING LINE BELOW BUTTON */
 
 .game::after {
     content: "";
@@ -478,10 +522,12 @@ footer {
     }
 
     nav {
-        gap: 12px;
+        gap: 6px;
     }
 
-    nav a {
+    .navButton {
+        min-width: 65px;
+        padding: 9px 12px;
         font-size: 14px;
     }
 
@@ -546,8 +592,8 @@ footer {
         </div>
 
         <nav>
-            <a href="#" onclick="showHome(event)">Home</a>
-            <a href="#" onclick="showGames(event)">Games</a>
+            <a href="#" class="navButton" onclick="showHome(event)">Home</a>
+            <a href="#" class="navButton" onclick="showGames(event)">Games</a>
         </nav>
 
     </header>
@@ -757,9 +803,79 @@ function addTiltEffects() {
             card.style.transform =
                 "perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)";
         });
-
     });
 }
+
+/* JELLY TOPBAR BUTTONS */
+
+document.querySelectorAll(".navButton").forEach(button => {
+
+    let currentX = 0;
+    let currentY = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let velocityX = 0;
+    let velocityY = 0;
+
+    button.addEventListener("mouseenter", () => {
+
+        button.style.transition =
+            "background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease";
+    });
+
+    button.addEventListener("mousemove", event => {
+
+        const rect = button.getBoundingClientRect();
+
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        targetX = ((x - centerX) / centerX) * 12;
+        targetY = ((y - centerY) / centerY) * 8;
+    });
+
+    button.addEventListener("mouseleave", () => {
+
+        targetX = 0;
+        targetY = 0;
+    });
+
+    function animateJelly() {
+
+        const spring = 0.13;
+        const friction = 0.72;
+
+        velocityX += (targetX - currentX) * spring;
+        velocityY += (targetY - currentY) * spring;
+
+        velocityX *= friction;
+        velocityY *= friction;
+
+        currentX += velocityX;
+        currentY += velocityY;
+
+        const rotation =
+            (velocityX - velocityY) * 0.7;
+
+        const scale =
+            1 + Math.min(
+                0.035,
+                (Math.abs(velocityX) + Math.abs(velocityY)) * 0.002
+            );
+
+        button.style.transform =
+            `translate3d(${currentX}px, ${currentY}px, 0)
+             rotate(${rotation}deg)
+             scale(${scale})`;
+
+        requestAnimationFrame(animateJelly);
+    }
+
+    animateJelly();
+});
 
 function showHome(event) {
 

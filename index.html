@@ -28,26 +28,13 @@ html {
 }
 
 body {
-    background:
-        radial-gradient(circle at 50% 0%, rgba(200,162,122,0.08), transparent 35%),
-        #121212;
-    color: white;
+    background: #121212;
+    color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
 }
 
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background:
-        radial-gradient(circle at 10% 30%, rgba(200,162,122,0.025), transparent 25%),
-        radial-gradient(circle at 90% 70%, rgba(200,162,122,0.02), transparent 30%);
-    z-index: -1;
-}
-
-/* PASSWORD SCREEN */
+/* PASSWORD */
 
 #passwordScreen {
     position: fixed;
@@ -55,11 +42,9 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    background:
-        radial-gradient(circle at center, rgba(200,162,122,0.09), transparent 40%),
-        #121212;
+    background: #121212;
     z-index: 9999;
-    animation: fadeIn 0.7s ease;
+    animation: fadeIn 0.6s ease;
 }
 
 .passwordBox {
@@ -67,12 +52,10 @@ body::before {
     max-width: 400px;
     padding: 42px;
     text-align: center;
-    background: rgba(29,29,29,0.96);
+    background: #1d1d1d;
     border: 1px solid rgba(200,162,122,0.45);
     border-radius: 20px;
-    box-shadow:
-        0 25px 70px rgba(0,0,0,0.55),
-        0 0 35px rgba(200,162,122,0.06);
+    box-shadow: 0 25px 70px rgba(0,0,0,0.55);
     animation: boxIn 0.7s ease;
 }
 
@@ -82,7 +65,6 @@ body::before {
     object-fit: contain;
     display: block;
     margin: 0 auto 20px;
-    filter: drop-shadow(0 0 18px rgba(200,162,122,0.18));
     animation: float 4s ease-in-out infinite;
 }
 
@@ -140,11 +122,11 @@ body::before {
     margin-bottom: 0;
 }
 
-/* MAIN WEBSITE */
+/* HEADER */
 
 #website {
     display: none;
-    animation: pageIn 0.55s ease;
+    animation: pageIn 0.5s ease;
 }
 
 header {
@@ -156,11 +138,10 @@ header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(31,31,31,0.88);
+    background: rgba(31,31,31,0.94);
     border-bottom: 1px solid rgba(255,255,255,0.025);
     box-shadow: 0 5px 20px rgba(0,0,0,0.35);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(12px);
 }
 
 .logo {
@@ -178,7 +159,7 @@ header {
 }
 
 .logo:hover img {
-    transform: scale(1.08) rotate(5deg);
+    transform: rotate(8deg) scale(1.08);
 }
 
 .logo h1 {
@@ -201,9 +182,12 @@ nav a:hover {
     color: var(--accent);
 }
 
+/* HERO */
+
 .hero {
     text-align: center;
     padding: 65px 20px 35px;
+    position: relative;
 }
 
 .hero h2 {
@@ -211,6 +195,8 @@ nav a:hover {
     letter-spacing: -1px;
     animation: heroIn 0.7s ease;
 }
+
+/* GAMES */
 
 .games {
     max-width: 1250px;
@@ -224,43 +210,41 @@ nav a:hover {
 
 .game {
     position: relative;
-    overflow: hidden;
     padding: 22px;
     text-align: center;
-    background:
-        linear-gradient(145deg, rgba(255,255,255,0.025), transparent 50%),
-        var(--card);
+    background: var(--card);
     border: 1px solid rgba(255,255,255,0.035);
     border-radius: 17px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.2);
     transform-style: preserve-3d;
     transition:
-        transform 0.12s ease-out,
+        transform 0.08s ease-out,
         border-color 0.3s ease,
-        box-shadow 0.35s ease;
-    animation: cardIn 0.6s ease both;
+        box-shadow 0.3s ease;
+    animation: cardIn 0.55s ease both;
 }
 
-.game::before {
+/* MOVING BORDER / LINES BELOW BUTTON */
+
+.game::after {
     content: "";
     position: absolute;
-    top: 0;
-    left: -120%;
-    width: 70%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,0.045),
-        transparent
-    );
-    transform: skewX(-20deg);
-    transition: left 0.7s ease;
-    pointer-events: none;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    transform: translateX(-50%);
+    background: var(--accent);
+    box-shadow: 0 0 12px rgba(200,162,122,0.35);
+    transition:
+        width 0.45s ease,
+        opacity 0.45s ease;
+    opacity: 0;
 }
 
-.game:hover::before {
-    left: 140%;
+.game:hover::after {
+    width: 75%;
+    opacity: 1;
 }
 
 .game:hover {
@@ -276,7 +260,7 @@ nav a:hover {
     object-fit: cover;
     border-radius: 11px;
     margin-bottom: 16px;
-    transition: 0.3s ease;
+    transition: 0.25s ease;
     transform: translateZ(20px);
 }
 
@@ -314,6 +298,8 @@ nav a:hover {
     box-shadow: 0 8px 22px rgba(200,162,122,0.18);
 }
 
+/* FOOTER */
+
 footer {
     text-align: center;
     padding: 45px 30px 35px;
@@ -337,7 +323,7 @@ footer {
     animation: pageIn 0.5s ease;
 }
 
-/* CLOUD GAMING */
+/* CLOUD */
 
 #cloudGaming {
     display: none;
@@ -399,8 +385,13 @@ footer {
 /* ANIMATIONS */
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes boxIn {
@@ -408,6 +399,7 @@ footer {
         opacity: 0;
         transform: translateY(20px) scale(0.97);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -419,6 +411,7 @@ footer {
         opacity: 0;
         transform: translateY(8px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -430,6 +423,7 @@ footer {
         opacity: 0;
         transform: translateY(15px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -441,6 +435,7 @@ footer {
         opacity: 0;
         transform: translateY(18px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -448,7 +443,7 @@ footer {
 }
 
 @keyframes float {
-    0%,100% {
+    0%, 100% {
         transform: translateY(0);
     }
 
@@ -458,7 +453,7 @@ footer {
 }
 
 @keyframes shake {
-    0%,100% {
+    0%, 100% {
         transform: translateX(0);
     }
 
@@ -471,7 +466,10 @@ footer {
     }
 }
 
+/* MOBILE */
+
 @media(max-width:700px) {
+
     header {
         padding: 0 20px;
     }
@@ -738,17 +736,17 @@ function addTiltEffects() {
             const centerY = rect.height / 2;
 
             const rotateY =
-                ((x - centerX) / centerX) * 9;
+                ((x - centerX) / centerX) * 10;
 
             const rotateX =
-                ((centerY - y) / centerY) * 9;
+                ((centerY - y) / centerY) * 10;
 
             card.style.transform =
                 `perspective(900px)
-                rotateX(${rotateX}deg)
-                rotateY(${rotateY}deg)
-                translateY(-7px)
-                scale(1.015)`;
+                 rotateX(${rotateX}deg)
+                 rotateY(${rotateY}deg)
+                 translateY(-7px)
+                 scale(1.02)`;
         });
 
         card.addEventListener("mouseleave", () => {
@@ -756,7 +754,6 @@ function addTiltEffects() {
             card.style.transform =
                 "perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)";
         });
-
     });
 }
 

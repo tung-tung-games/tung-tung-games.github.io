@@ -34,6 +34,8 @@ body {
     overflow-x: hidden;
 }
 
+/* PASSWORD SCREEN */
+
 #passwordScreen {
     position: fixed;
     inset: 0;
@@ -118,6 +120,8 @@ body {
     margin-bottom: 0;
 }
 
+/* MAIN WEBSITE */
+
 #website {
     display: none;
     animation: pageIn 0.5s ease;
@@ -160,6 +164,8 @@ header {
     font-size: 28px;
 }
 
+/* TOP BAR */
+
 nav {
     display: flex;
     align-items: center;
@@ -167,7 +173,6 @@ nav {
 }
 
 .navButton {
-    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -193,6 +198,8 @@ nav {
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
+/* HERO */
+
 .hero {
     text-align: center;
     padding: 65px 20px 35px;
@@ -204,6 +211,8 @@ nav {
     animation: heroIn 0.7s ease;
 }
 
+/* GAME GRID */
+
 .games {
     max-width: 1250px;
     margin: auto;
@@ -214,6 +223,8 @@ nav {
     perspective: 1200px;
 }
 
+/* WHOLE GAME TILE */
+
 .game {
     position: relative;
     padding: 22px;
@@ -223,9 +234,10 @@ nav {
     border-radius: 17px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.2);
     will-change: transform;
+    transform: translate3d(0,0,0) rotate(0deg) scale(1);
     transition:
-        border-color 0.3s ease,
-        box-shadow 0.3s ease;
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
     animation: cardIn 0.55s ease both;
 }
 
@@ -242,7 +254,7 @@ nav {
     object-fit: cover;
     border-radius: 11px;
     margin-bottom: 16px;
-    transition: 0.25s ease;
+    transition: transform 0.25s ease;
 }
 
 .game:hover img {
@@ -260,6 +272,8 @@ nav {
     font-size: 14px;
 }
 
+/* PLAY BUTTON */
+
 .play {
     display: inline-block;
     padding: 12px 23px;
@@ -276,6 +290,8 @@ nav {
     box-shadow: 0 8px 22px rgba(200,162,122,0.18);
 }
 
+/* FOOTER */
+
 footer {
     text-align: center;
     padding: 45px 30px 35px;
@@ -290,6 +306,8 @@ footer {
 .secretLink:hover {
     color: var(--accent);
 }
+
+/* OTHER PAGES */
 
 #gamesPage {
     display: none;
@@ -353,9 +371,16 @@ footer {
     background: var(--accent-dark);
 }
 
+/* ANIMATIONS */
+
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes boxIn {
@@ -363,6 +388,7 @@ footer {
         opacity: 0;
         transform: translateY(20px) scale(0.97);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -374,6 +400,7 @@ footer {
         opacity: 0;
         transform: translateY(8px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -385,6 +412,7 @@ footer {
         opacity: 0;
         transform: translateY(15px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -396,6 +424,7 @@ footer {
         opacity: 0;
         transform: translateY(18px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -406,15 +435,24 @@ footer {
     0%, 100% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-6px);
     }
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
 }
 
 @media(max-width:700px) {
@@ -670,7 +708,7 @@ function renderAllGames() {
     addJellyGameEffects();
 }
 
-/* TOPBAR JELLY INTERACTION */
+/* TOPBAR JELLY EFFECT */
 
 document.querySelectorAll(".navButton").forEach(button => {
 
@@ -681,47 +719,41 @@ document.querySelectorAll(".navButton").forEach(button => {
     let velocityX = 0;
     let velocityY = 0;
 
-    button.addEventListener("mouseenter", () => {
-        button.dataset.inside = "true";
-    });
-
     button.addEventListener("mousemove", event => {
 
         const rect = button.getBoundingClientRect();
 
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+        targetX =
+            ((event.clientX - rect.left - rect.width / 2) /
+            (rect.width / 2)) * 12;
 
-        targetX = ((x - rect.width / 2) / (rect.width / 2)) * 12;
-        targetY = ((y - rect.height / 2) / (rect.height / 2)) * 8;
+        targetY =
+            ((event.clientY - rect.top - rect.height / 2) /
+            (rect.height / 2)) * 8;
     });
 
     button.addEventListener("mouseleave", () => {
-        button.dataset.inside = "false";
         targetX = 0;
         targetY = 0;
     });
 
     function animate() {
 
-        const spring = 0.16;
-        const friction = 0.72;
+        velocityX += (targetX - currentX) * 0.16;
+        velocityY += (targetY - currentY) * 0.16;
 
-        velocityX += (targetX - currentX) * spring;
-        velocityY += (targetY - currentY) * spring;
-
-        velocityX *= friction;
-        velocityY *= friction;
+        velocityX *= 0.72;
+        velocityY *= 0.72;
 
         currentX += velocityX;
         currentY += velocityY;
 
-        const rotation = (velocityX - velocityY) * 0.65;
+        const rotation =
+            (velocityX - velocityY) * 0.65;
 
         button.style.transform =
             `translate3d(${currentX}px, ${currentY}px, 0)
-             rotate(${rotation}deg)
-             scale(1)`;
+             rotate(${rotation}deg)`;
 
         requestAnimationFrame(animate);
     }
@@ -729,7 +761,7 @@ document.querySelectorAll(".navButton").forEach(button => {
     animate();
 });
 
-/* WHOLE GAME BOX JELLY INTERACTION */
+/* WHOLE GAME TILE JELLY EFFECT */
 
 function addJellyGameEffects() {
 
@@ -744,32 +776,30 @@ function addJellyGameEffects() {
         let velocityX = 0;
         let velocityY = 0;
 
-        let inside = false;
-
-        game.addEventListener("mouseenter", () => {
-            inside = true;
-        });
-
         game.addEventListener("mousemove", event => {
 
             const rect = game.getBoundingClientRect();
 
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
+            const x =
+                event.clientX - rect.left;
 
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
+            const y =
+                event.clientY - rect.top;
+
+            const centerX =
+                rect.width / 2;
+
+            const centerY =
+                rect.height / 2;
 
             targetX =
-                ((x - centerX) / centerX) * 14;
+                ((x - centerX) / centerX) * 18;
 
             targetY =
-                ((y - centerY) / centerY) * 10;
+                ((y - centerY) / centerY) * 14;
         });
 
         game.addEventListener("mouseleave", () => {
-
-            inside = false;
 
             targetX = 0;
             targetY = 0;
@@ -777,37 +807,34 @@ function addJellyGameEffects() {
 
         function animateGame() {
 
-            const spring = inside ? 0.12 : 0.075;
-            const friction = 0.78;
-
             velocityX +=
-                (targetX - currentX) * spring;
+                (targetX - currentX) * 0.12;
 
             velocityY +=
-                (targetY - currentY) * spring;
+                (targetY - currentY) * 0.12;
 
-            velocityX *= friction;
-            velocityY *= friction;
+            velocityX *= 0.78;
+            velocityY *= 0.78;
 
             currentX += velocityX;
             currentY += velocityY;
 
             const rotation =
-                (velocityX - velocityY) * 0.5;
+                (velocityX - velocityY) * 0.45;
 
-            const movement =
+            const speed =
                 Math.sqrt(
                     velocityX * velocityX +
                     velocityY * velocityY
                 );
 
             const stretch =
-                Math.min(0.025, movement * 0.0015);
+                Math.min(0.035, speed * 0.0018);
 
             game.style.transform =
                 `translate3d(${currentX}px, ${currentY}px, 0)
                  rotate(${rotation}deg)
-                 scale(${1 + stretch}, ${1 - stretch * 0.5})`;
+                 scale(${1 + stretch}, ${1 - stretch * 0.45})`;
 
             requestAnimationFrame(animateGame);
         }
@@ -818,9 +845,7 @@ function addJellyGameEffects() {
 
 function showHome(event) {
 
-    if (event) {
-        event.preventDefault();
-    }
+    event.preventDefault();
 
     document.getElementById("website").style.display = "block";
     document.getElementById("gamesPage").style.display = "none";
@@ -833,9 +858,7 @@ function showHome(event) {
 
 function showGames(event) {
 
-    if (event) {
-        event.preventDefault();
-    }
+    event.preventDefault();
 
     document.getElementById("website").style.display = "none";
     document.getElementById("gamesPage").style.display = "block";

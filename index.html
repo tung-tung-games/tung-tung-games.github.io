@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,15 +58,15 @@ body {
     border-radius: 20px;
     box-shadow: 0 25px 70px rgba(0,0,0,.55);
     animation: passwordIn .7s ease;
-    transition: border-color .2s ease, box-shadow .2s ease;
+    transition:
+        border-color .7s ease,
+        box-shadow .7s ease;
 }
 
 .passwordBox.errorState {
-    border-color: #ff3b3b;
-    box-shadow:
-        0 0 0 2px rgba(255,59,59,.12),
-        0 20px 60px rgba(255,0,0,.12);
-    animation: passwordShake .35s ease;
+    animation:
+        passwordShake .55s ease,
+        passwordErrorFade 1.4s ease forwards;
 }
 
 .passwordBox img {
@@ -99,10 +100,6 @@ body {
     text-align: center;
     margin-bottom: 14px;
     transition: border-color .2s ease;
-}
-
-.passwordBox.errorState input {
-    border-color: #ff3b3b;
 }
 
 .passwordBox button {
@@ -376,8 +373,13 @@ footer {
 /* ANIMATIONS */
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes passwordIn {
@@ -392,29 +394,67 @@ footer {
     }
 }
 
+/* PASSWORD ERROR SHAKE */
+
 @keyframes passwordShake {
     0% {
         transform: translateX(0);
     }
 
-    20% {
-        transform: translateX(-8px);
+    15% {
+        transform: translateX(-9px);
     }
 
-    40% {
-        transform: translateX(8px);
+    30% {
+        transform: translateX(9px);
+    }
+
+    45% {
+        transform: translateX(-7px);
     }
 
     60% {
-        transform: translateX(-6px);
+        transform: translateX(7px);
     }
 
-    80% {
-        transform: translateX(6px);
+    75% {
+        transform: translateX(-4px);
+    }
+
+    90% {
+        transform: translateX(4px);
     }
 
     100% {
         transform: translateX(0);
+    }
+}
+
+/* PASSWORD BORDER BEIGE -> RED -> BEIGE */
+
+@keyframes passwordErrorFade {
+    0% {
+        border-color: rgba(200,162,122,.45);
+        box-shadow: 0 25px 70px rgba(0,0,0,.55);
+    }
+
+    25% {
+        border-color: #ff3b3b;
+        box-shadow:
+            0 0 0 2px rgba(255,59,59,.15),
+            0 20px 60px rgba(255,0,0,.18);
+    }
+
+    55% {
+        border-color: #ff3b3b;
+        box-shadow:
+            0 0 0 2px rgba(255,59,59,.15),
+            0 20px 60px rgba(255,0,0,.18);
+    }
+
+    100% {
+        border-color: rgba(200,162,122,.45);
+        box-shadow: 0 25px 70px rgba(0,0,0,.55);
     }
 }
 

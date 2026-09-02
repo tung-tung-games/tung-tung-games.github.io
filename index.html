@@ -129,11 +129,7 @@ transform:translateY(12px)!important;
 pointer-events:none;
 }
 
-#website{
-display:none;
-}
-
-#gamesPage{
+#website,#gamesPage{
 display:none;
 }
 
@@ -287,35 +283,100 @@ padding:45px 30px 35px;
 color:#777;
 }
 
-#gameLoader{
+#gamePage{
 position:fixed;
 inset:0;
-background:#121212;
-z-index:10000;
 display:none;
+background:#121212;
+z-index:5000;
+}
+
+.gameHeader{
+height:70px;
+position:absolute;
+top:0;
+left:0;
+right:0;
+z-index:20;
+}
+
+.gameControls{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.gameControl{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+padding:10px 16px;
+border-radius:10px;
+color:white;
+text-decoration:none;
+font-weight:bold;
+background:rgba(255,255,255,.035);
+border:1px solid rgba(255,255,255,.045);
+cursor:pointer;
+transition:background .25s ease,border-color .25s ease,transform .2s ease;
+}
+
+.gameControl:hover{
+background:rgba(200,162,122,.12);
+border-color:rgba(200,162,122,.35);
+transform:translateY(-1px);
+}
+
+#gameFrame{
+position:absolute;
+top:70px;
+left:0;
+width:100%;
+height:calc(100% - 70px);
+border:0;
+background:#121212;
+}
+
+#gameLoader{
+position:absolute;
+top:70px;
+left:0;
+right:0;
+bottom:0;
+z-index:30;
+background:#121212;
+display:flex;
 align-items:center;
 justify-content:center;
 flex-direction:column;
 opacity:1;
-transition:opacity .45s ease;
+visibility:visible;
+transition:opacity .6s ease,visibility .6s ease;
 }
 
 #gameLoader.hidden{
 opacity:0;
+visibility:hidden;
 pointer-events:none;
 }
 
 #gameLoader img{
-width:120px;
-height:120px;
+width:125px;
+height:125px;
 object-fit:contain;
-margin-bottom:28px;
+margin-bottom:25px;
 animation:loaderFloat 2.5s ease-in-out infinite;
 }
 
+.loadingText{
+font-size:18px;
+font-weight:bold;
+margin-bottom:16px;
+}
+
 .loaderBar{
-width:min(360px,70vw);
-height:7px;
+width:min(380px,72vw);
+height:8px;
 background:#292929;
 border-radius:20px;
 overflow:hidden;
@@ -327,7 +388,11 @@ height:100%;
 width:0%;
 background:var(--accent);
 border-radius:20px;
-transition:width .1s linear;
+transition:width .25s cubic-bezier(.2,.8,.2,1);
+}
+
+.fullscreenButton{
+min-width:125px;
 }
 
 @keyframes passwordShake{
@@ -358,6 +423,8 @@ nav{gap:6px}
 .logo h1{font-size:22px}
 .hero h2{font-size:36px}
 .games{grid-template-columns:1fr;padding:25px 20px}
+.gameControls{gap:6px}
+.gameControl{padding:9px 11px;font-size:13px}
 } </style>
 
 </head>
@@ -370,13 +437,6 @@ nav{gap:6px}
 <p>Enter the password to access Tung Games.</p>
 <input type="password" id="passwordInput" placeholder="Password" autocomplete="off">
 <button id="passwordButton" onclick="checkPassword()">Enter</button>
-</div>
-</div>
-
-<div id="gameLoader">
-<img src="tung-nobg.png" alt="Tung">
-<div class="loaderBar">
-<div class="loaderProgress" id="loaderProgress"></div>
 </div>
 </div>
 
@@ -426,13 +486,36 @@ nav{gap:6px}
 </footer>
 </div>
 
+<div id="gamePage">
+<header class="gameHeader">
+<div class="logo">
+<img src="tung-nobg.png" alt="Tung">
+<h1>Tung Games</h1>
+</div>
+<div class="gameControls">
+<button class="gameControl" onclick="closeGame()">Back</button>
+<button class="gameControl fullscreenButton" onclick="toggleFullscreen()">Fullscreen</button>
+</div>
+</header>
+
+<iframe id="gameFrame" allowfullscreen></iframe>
+
+<div id="gameLoader">
+<img src="tung-nobg.png" alt="Tung">
+<div class="loadingText">Loading game...</div>
+<div class="loaderBar">
+<div class="loaderProgress" id="loaderProgress"></div>
+</div>
+</div>
+</div>
+
 <script>
 const GAME_COUNT=100;
 const HOME_GAME_COUNT=8;
 const GAME_NAMES={};
 let passwordLocked=false;
 let transitionBusy=false;
-let gameLoading=false;
+let currentGame=0;
 
 for(let i=1;i<=GAME_COUNT;i++){
 GAME_NAMES[i]="Game "+i;
@@ -594,7 +677,6 @@ function switchPage(from,to){
 if(transitionBusy)return;
 
 transitionBusy=true;
-
 from.classList.add("pageHidden");
 
 setTimeout(()=>{
@@ -617,7 +699,7 @@ transitionBusy=false;
 function showHome(event){
 event.preventDefault();
 
-if(transitionBusy||gameLoading)return;
+if(transitionBusy)return;
 
 const gamesPage=document.getElementById("gamesPage");
 const website=document.getElementById("website");
@@ -632,7 +714,7 @@ window.scrollTo(0,0);
 function showGames(event){
 event.preventDefault();
 
-if(transitionBusy||gameLoading)return;
+if(transitionBusy)return;
 
 const website=document.getElementById("website");
 const gamesPage=document.getElementById("gamesPage");
@@ -647,36 +729,110 @@ window.scrollTo(0,0);
 function loadGame(event,number){
 event.preventDefault();
 
-if(gameLoading)return;
-
-gameLoading=true;
+currentGame=number;
 recordVisit(number);
 
+const gamePage=document.getElementById("gamePage");
+const frame=document.getElementById("gameFrame");
 const loader=document.getElementById("gameLoader");
 const progress=document.getElementById("loaderProgress");
 
-loader.style.display="flex";
+gamePage.style.display="block";
+gamePage.classList.remove("pageHidden");
+
+frame.src=number+".html";
+
 loader.classList.remove("hidden");
 progress.style.width="0%";
 
+const duration=15000+Math.random()*10000;
 const start=performance.now();
-const duration=15000;
-const target=number+".html";
 
-function updateLoader(now){
+let displayed=0;
+let target=0;
+let lastTargetChange=0;
+
+function animateLoader(now){
 const elapsed=now-start;
-const percent=Math.min((elapsed/duration)*100,100);
+const realProgress=Math.min(elapsed/duration,1);
 
-progress.style.width=percent+"%";
+if(now-lastTargetChange>300+Math.random()*800){
+const current=realProgress*100;
+const remaining=96-current;
+const jump=Math.random()*Math.min(remaining,Math.max(2,remaining*.22));
+target=Math.min(96,current+jump);
+lastTargetChange=now;
+}
 
-if(elapsed<duration){
-requestAnimationFrame(updateLoader);
+if(realProgress>=1){
+displayed+=(100-displayed)*.12;
+progress.style.width=displayed+"%";
+
+if(displayed>99.5){
+progress.style.width="100%";
+
+setTimeout(()=>{
+loader.classList.add("hidden");
+},350);
+
+return;
+}
 }else{
-window.location.href=target;
-}
+const minimum=realProgress*100;
+
+if(target<minimum){
+target=minimum+Math.random()*2;
 }
 
-requestAnimationFrame(updateLoader);
+displayed+=(target-displayed)*.055;
+
+if(Math.random()<.025&&displayed>8&&displayed<90){
+displayed-=Math.random()*1.5;
+}
+
+progress.style.width=Math.max(0,Math.min(96,displayed))+"%";
+}
+
+requestAnimationFrame(animateLoader);
+}
+
+requestAnimationFrame(animateLoader);
+}
+
+function closeGame(){
+const gamePage=document.getElementById("gamePage");
+const frame=document.getElementById("gameFrame");
+
+frame.src="";
+gamePage.style.display="none";
+currentGame=0;
+
+const website=document.getElementById("website");
+const gamesPage=document.getElementById("gamesPage");
+
+if(gamesPage.style.display==="block"){
+gamesPage.classList.remove("pageHidden");
+}else{
+website.style.display="block";
+website.classList.remove("pageHidden");
+renderHomeGames();
+}
+
+window.scrollTo(0,0);
+}
+
+function toggleFullscreen(){
+const frame=document.getElementById("gameFrame");
+
+if(!document.fullscreenElement){
+if(frame.requestFullscreen){
+frame.requestFullscreen();
+}
+}else{
+if(document.exitFullscreen){
+document.exitFullscreen();
+}
+}
 }
 
 function checkPassword(){

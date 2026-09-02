@@ -53,10 +53,19 @@ body {
     padding: 42px;
     text-align: center;
     background: var(--card);
-    border: 1px solid rgba(200,162,122,.45);
+    border: 2px solid rgba(200,162,122,.45);
     border-radius: 20px;
     box-shadow: 0 25px 70px rgba(0,0,0,.55);
     animation: passwordIn .7s ease;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.passwordBox.errorState {
+    border-color: #ff3b3b;
+    box-shadow:
+        0 0 0 2px rgba(255,59,59,.12),
+        0 20px 60px rgba(255,0,0,.12);
+    animation: passwordShake .35s ease;
 }
 
 .passwordBox img {
@@ -89,11 +98,11 @@ body {
     font-size: 16px;
     text-align: center;
     margin-bottom: 14px;
-    transition: .25s ease;
+    transition: border-color .2s ease;
 }
 
-.passwordBox input:focus {
-    border-color: var(--accent);
+.passwordBox.errorState input {
+    border-color: #ff3b3b;
 }
 
 .passwordBox button {
@@ -115,7 +124,7 @@ body {
 
 #passwordError {
     display: none;
-    color: #ff6666;
+    color: #ff5555;
     margin-top: 14px;
     margin-bottom: 0;
 }
@@ -222,12 +231,7 @@ nav {
     gap: 25px;
 }
 
-/*
-    GAME TILE
-
-    The entire tile uses the same cursor-following
-    movement style as the top navigation buttons.
-*/
+/* WHOLE GAME TILE */
 
 .game {
     position: relative;
@@ -237,13 +241,8 @@ nav {
     border: 1px solid rgba(255,255,255,.035);
     border-radius: 17px;
     box-shadow: 0 8px 25px rgba(0,0,0,.2);
-
     will-change: transform;
-
-    transform:
-        translate3d(0,0,0)
-        rotate(0deg);
-
+    transform: translate3d(0,0,0) rotate(0deg);
     transition:
         border-color .25s ease,
         box-shadow .25s ease;
@@ -251,19 +250,10 @@ nav {
 
 .game:hover {
     border-color: rgba(200,162,122,.45);
-
     box-shadow:
         0 22px 45px rgba(0,0,0,.35),
         0 0 28px rgba(200,162,122,.07);
 }
-
-/*
-    IMPORTANT:
-    The transform is on .game itself.
-
-    This means the image, title, description
-    and Play button all move together as one tile.
-*/
 
 .game img {
     width: 100%;
@@ -283,8 +273,6 @@ nav {
     margin-bottom: 20px;
     font-size: 14px;
 }
-
-/* PLAY BUTTON */
 
 .play {
     display: inline-block;
@@ -388,13 +376,8 @@ footer {
 /* ANIMATIONS */
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes passwordIn {
@@ -406,6 +389,32 @@ footer {
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes passwordShake {
+    0% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-8px);
+    }
+
+    40% {
+        transform: translateX(8px);
+    }
+
+    60% {
+        transform: translateX(-6px);
+    }
+
+    80% {
+        transform: translateX(6px);
+    }
+
+    100% {
+        transform: translateX(0);
     }
 }
 
@@ -434,26 +443,12 @@ footer {
 }
 
 @keyframes float {
-    0%, 100% {
+    0%,100% {
         transform: translateY(0);
     }
 
     50% {
         transform: translateY(-6px);
-    }
-}
-
-@keyframes shake {
-    0%, 100% {
-        transform: translateX(0);
-    }
-
-    25% {
-        transform: translateX(-5px);
-    }
-
-    75% {
-        transform: translateX(5px);
     }
 }
 
@@ -501,11 +496,9 @@ footer {
 
 <body>
 
-<!-- PASSWORD SCREEN -->
-
 <div id="passwordScreen">
 
-    <div class="passwordBox">
+    <div class="passwordBox" id="passwordBox">
 
         <img src="tung-nobg.png" alt="Tung">
 
@@ -528,8 +521,6 @@ footer {
 
 </div>
 
-<!-- MAIN WEBSITE -->
-
 <div id="website">
 
     <header>
@@ -545,17 +536,13 @@ footer {
                 href="#"
                 class="navButton"
                 onclick="showHome(event)"
-            >
-                Home
-            </a>
+            >Home</a>
 
             <a
                 href="#"
                 class="navButton"
                 onclick="showGames(event)"
-            >
-                Games
-            </a>
+            >Games</a>
 
         </nav>
 
@@ -584,8 +571,6 @@ footer {
 
 </div>
 
-<!-- ALL GAMES PAGE -->
-
 <div id="gamesPage">
 
     <section class="hero">
@@ -598,8 +583,6 @@ footer {
     ></section>
 
 </div>
-
-<!-- CLOUD GAMING -->
 
 <div id="cloudGaming">
 
@@ -646,8 +629,6 @@ function getGameName(number) {
     return GAME_NAMES[number];
 }
 
-/* CREATE GAME TILE */
-
 function gameCard(number) {
 
     const name = getGameName(number);
@@ -676,8 +657,6 @@ function gameCard(number) {
     `;
 }
 
-/* DATE */
-
 function getTodayKey() {
 
     const now = new Date();
@@ -686,8 +665,6 @@ function getTodayKey() {
         String(now.getMonth() + 1).padStart(2, "0") + "-" +
         String(now.getDate()).padStart(2, "0");
 }
-
-/* POPULARITY */
 
 function getPopularity() {
 
@@ -715,8 +692,6 @@ function getPopularity() {
     return saved;
 }
 
-/* RECORD VISIT */
-
 function recordVisit(number) {
 
     const popularity = getPopularity();
@@ -730,8 +705,6 @@ function recordVisit(number) {
     );
 }
 
-/* SORT POPULARITY */
-
 function getPopularGames() {
 
     const popularity = getPopularity();
@@ -741,7 +714,7 @@ function getPopularGames() {
         (_, index) => index + 1
     );
 
-    games.sort((a, b) => {
+    games.sort((a,b) => {
 
         const visitsA =
             popularity.visits[a] || 0;
@@ -759,8 +732,6 @@ function getPopularGames() {
     return games;
 }
 
-/* HOME - TOP 8 */
-
 function renderHomeGames() {
 
     const list =
@@ -774,8 +745,6 @@ function renderHomeGames() {
 
     addGameJelly();
 }
-
-/* ALL 100 GAMES */
 
 function renderAllGames() {
 
@@ -791,13 +760,7 @@ function renderAllGames() {
     addGameJelly();
 }
 
-/*
-    SAME STYLE AS THE TOPBAR
-
-    The whole game tile follows the cursor.
-    The image is inside the tile, so it moves
-    with the tile rather than independently.
-*/
+/* GAME TILE CURSOR MOVEMENT */
 
 function addGameJelly() {
 
@@ -812,15 +775,7 @@ function addGameJelly() {
         let velocityX = 0;
         let velocityY = 0;
 
-        let hovering = false;
-
-        game.addEventListener("mouseenter", () => {
-            hovering = true;
-        });
-
         game.addEventListener("mousemove", event => {
-
-            hovering = true;
 
             const rect =
                 game.getBoundingClientRect();
@@ -837,11 +792,6 @@ function addGameJelly() {
             const centerY =
                 rect.height / 2;
 
-            /*
-                Cursor position controls the
-                direction of the WHOLE tile.
-            */
-
             targetX =
                 ((mouseX - centerX) / centerX) * 12;
 
@@ -851,8 +801,6 @@ function addGameJelly() {
 
         game.addEventListener("mouseleave", () => {
 
-            hovering = false;
-
             targetX = 0;
             targetY = 0;
         });
@@ -860,25 +808,19 @@ function addGameJelly() {
         function animate() {
 
             velocityX +=
-                (targetX - x) * 0.15;
+                (targetX - x) * .15;
 
             velocityY +=
-                (targetY - y) * 0.15;
+                (targetY - y) * .15;
 
-            velocityX *= 0.72;
-            velocityY *= 0.72;
+            velocityX *= .72;
+            velocityY *= .72;
 
             x += velocityX;
             y += velocityY;
 
-            /*
-                The movement creates the slight
-                jelly-like rotation from the
-                direction the cursor moves.
-            */
-
             const rotation =
-                (velocityX - velocityY) * 0.45;
+                (velocityX - velocityY) * .45;
 
             game.style.transform =
                 `translate3d(${x}px, ${y}px, 0)
@@ -891,7 +833,7 @@ function addGameJelly() {
     });
 }
 
-/* TOP BAR */
+/* TOP BAR CURSOR MOVEMENT */
 
 document.querySelectorAll(".navButton").forEach(button => {
 
@@ -968,7 +910,7 @@ function showHome(event) {
 
     renderHomeGames();
 
-    window.scrollTo(0, 0);
+    window.scrollTo(0,0);
 }
 
 /* GAMES */
@@ -988,7 +930,7 @@ function showGames(event) {
 
     renderAllGames();
 
-    window.scrollTo(0, 0);
+    window.scrollTo(0,0);
 }
 
 /* PASSWORD */
@@ -1001,7 +943,12 @@ function checkPassword() {
     const error =
         document.getElementById("passwordError");
 
+    const box =
+        document.getElementById("passwordBox");
+
     if (password === "TUNG") {
+
+        box.classList.remove("errorState");
 
         document.getElementById("passwordScreen")
             .style.display = "none";
@@ -1017,12 +964,11 @@ function checkPassword() {
 
         error.style.display = "block";
 
-        error.style.animation = "none";
+        box.classList.remove("errorState");
 
-        void error.offsetWidth;
+        void box.offsetWidth;
 
-        error.style.animation =
-            "shake .35s ease";
+        box.classList.add("errorState");
     }
 }
 
@@ -1041,7 +987,7 @@ function openCloudGaming(event) {
     document.getElementById("cloudGaming")
         .style.display = "block";
 
-    window.scrollTo(0, 0);
+    window.scrollTo(0,0);
 }
 
 /* BACK */
@@ -1059,7 +1005,7 @@ function goBack() {
 
     renderHomeGames();
 
-    window.scrollTo(0, 0);
+    window.scrollTo(0,0);
 }
 
 /* ENTER KEY */

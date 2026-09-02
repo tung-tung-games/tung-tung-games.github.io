@@ -462,7 +462,6 @@ footer {
 }
 
 @media(max-width:700px) {
-
     header {
         padding: 0 20px;
     }
@@ -505,12 +504,10 @@ footer {
 <body>
 
 <div id="passwordScreen">
+    <div class="passwordBox" id="passwordBox">
+        <img src="tung-nobg.png" alt="Tung">
 
 ```
-<div class="passwordBox" id="passwordBox">
-
-    <img src="tung-nobg.png" alt="Tung">
-
     <h2>Enter Password</h2>
 
     <p>Enter the password to access Tung Games.</p>
@@ -523,24 +520,20 @@ footer {
     >
 
     <button onclick="checkPassword()">Enter</button>
-
 </div>
 ```
 
 </div>
 
 <div id="website">
+    <header>
+        <div class="logo">
+            <img src="tung-nobg.png" alt="Tung">
+            <h1>Tung Games</h1>
+        </div>
 
 ```
-<header>
-
-    <div class="logo">
-        <img src="tung-nobg.png" alt="Tung">
-        <h1>Tung Games</h1>
-    </div>
-
     <nav>
-
         <a
             href="#"
             class="navButton"
@@ -552,9 +545,7 @@ footer {
             class="navButton"
             onclick="showGames(event)"
         >Games</a>
-
     </nav>
-
 </header>
 
 <section class="hero">
@@ -567,7 +558,6 @@ footer {
 ></section>
 
 <footer>
-
     <a
         href="#"
         class="secretLink"
@@ -575,19 +565,17 @@ footer {
     >
         © 2026 Tung Games
     </a>
-
 </footer>
 ```
 
 </div>
 
 <div id="gamesPage">
+    <section class="hero">
+        <h2>All Games</h2>
+    </section>
 
 ```
-<section class="hero">
-    <h2>All Games</h2>
-</section>
-
 <section
     class="games"
     id="allGameList"
@@ -597,21 +585,17 @@ footer {
 </div>
 
 <div id="cloudGaming">
+    <div class="cloudHeader">
+        <img
+            src="tung-nobg.png"
+            alt="Tung"
+        >
 
 ```
-<div class="cloudHeader">
-
-    <img
-        src="tung-nobg.png"
-        alt="Tung"
-    >
-
     <h1>Tung Cloud Gaming</h1>
-
 </div>
 
 <div class="cloudContent">
-
     <h2>Cloud Gaming</h2>
 
     <p>Welcome to Tung Cloud Gaming.</p>
@@ -622,14 +606,12 @@ footer {
     >
         Back
     </button>
-
 </div>
 ```
 
 </div>
 
 <script>
-
 const GAME_COUNT = 100;
 const HOME_GAME_COUNT = 8;
 
@@ -644,12 +626,10 @@ function getGameName(number) {
 }
 
 function gameCard(number) {
-
     const name = getGameName(number);
 
     return `
         <div class="game">
-
             <img
                 src="${number}.png"
                 alt="${name}"
@@ -666,13 +646,11 @@ function gameCard(number) {
             >
                 Play
             </a>
-
         </div>
     `;
 }
 
 function getTodayKey() {
-
     const now = new Date();
 
     return now.getFullYear() + "-" +
@@ -681,7 +659,6 @@ function getTodayKey() {
 }
 
 function getPopularity() {
-
     const today = getTodayKey();
 
     const saved = JSON.parse(
@@ -689,7 +666,6 @@ function getPopularity() {
     );
 
     if (saved.date !== today) {
-
         const fresh = {
             date: today,
             visits: {}
@@ -707,7 +683,6 @@ function getPopularity() {
 }
 
 function recordVisit(number) {
-
     const popularity = getPopularity();
 
     popularity.visits[number] =
@@ -720,7 +695,6 @@ function recordVisit(number) {
 }
 
 function getPopularGames() {
-
     const popularity = getPopularity();
 
     const games = Array.from(
@@ -728,8 +702,7 @@ function getPopularGames() {
         (_, index) => index + 1
     );
 
-    games.sort((a,b) => {
-
+    games.sort((a, b) => {
         const visitsA =
             popularity.visits[a] || 0;
 
@@ -747,7 +720,6 @@ function getPopularGames() {
 }
 
 function renderHomeGames() {
-
     const list =
         document.getElementById("gameList");
 
@@ -761,7 +733,6 @@ function renderHomeGames() {
 }
 
 function renderAllGames() {
-
     const list =
         document.getElementById("allGameList");
 
@@ -775,9 +746,7 @@ function renderAllGames() {
 }
 
 function addGameJelly() {
-
     document.querySelectorAll(".game").forEach(game => {
-
         let x = 0;
         let y = 0;
 
@@ -788,7 +757,6 @@ function addGameJelly() {
         let velocityY = 0;
 
         game.addEventListener("mousemove", event => {
-
             const rect =
                 game.getBoundingClientRect();
 
@@ -812,13 +780,11 @@ function addGameJelly() {
         });
 
         game.addEventListener("mouseleave", () => {
-
             targetX = 0;
             targetY = 0;
         });
 
         function animate() {
-
             velocityX +=
                 (targetX - x) * .15;
 
@@ -835,8 +801,7 @@ function addGameJelly() {
                 (velocityX - velocityY) * .45;
 
             game.style.transform =
-                `translate3d(${x}px, ${y}px, 0)
-                 rotate(${rotation}deg)`;
+                `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg)`;
 
             requestAnimationFrame(animate);
         }
@@ -846,7 +811,6 @@ function addGameJelly() {
 }
 
 document.querySelectorAll(".navButton").forEach(button => {
-
     let x = 0;
     let y = 0;
 
@@ -857,7 +821,6 @@ document.querySelectorAll(".navButton").forEach(button => {
     let velocityY = 0;
 
     button.addEventListener("mousemove", event => {
-
         const rect =
             button.getBoundingClientRect();
 
@@ -871,13 +834,11 @@ document.querySelectorAll(".navButton").forEach(button => {
     });
 
     button.addEventListener("mouseleave", () => {
-
         targetX = 0;
         targetY = 0;
     });
 
     function animate() {
-
         velocityX +=
             (targetX - x) * .16;
 
@@ -894,8 +855,7 @@ document.querySelectorAll(".navButton").forEach(button => {
             (velocityX - velocityY) * .65;
 
         button.style.transform =
-            `translate3d(${x}px, ${y}px, 0)
-             rotate(${rotation}deg)`;
+            `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg)`;
 
         requestAnimationFrame(animate);
     }
@@ -904,7 +864,6 @@ document.querySelectorAll(".navButton").forEach(button => {
 });
 
 function showHome(event) {
-
     event.preventDefault();
 
     document.getElementById("website")
@@ -918,11 +877,10 @@ function showHome(event) {
 
     renderHomeGames();
 
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 }
 
 function showGames(event) {
-
     event.preventDefault();
 
     document.getElementById("website")
@@ -936,11 +894,10 @@ function showGames(event) {
 
     renderAllGames();
 
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 }
 
 function checkPassword() {
-
     const password =
         document.getElementById("passwordInput").value;
 
@@ -948,7 +905,6 @@ function checkPassword() {
         document.getElementById("passwordBox");
 
     if (password === "TUNG") {
-
         box.classList.remove("errorState");
 
         document.getElementById("passwordScreen")
@@ -958,9 +914,7 @@ function checkPassword() {
             .style.display = "block";
 
         renderHomeGames();
-
     } else {
-
         box.classList.remove("errorState");
 
         void box.offsetWidth;
@@ -970,7 +924,6 @@ function checkPassword() {
 }
 
 function openCloudGaming(event) {
-
     event.preventDefault();
 
     document.getElementById("website")
@@ -982,11 +935,10 @@ function openCloudGaming(event) {
     document.getElementById("cloudGaming")
         .style.display = "block";
 
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 }
 
 function goBack() {
-
     document.getElementById("cloudGaming")
         .style.display = "none";
 
@@ -998,7 +950,7 @@ function goBack() {
 
     renderHomeGames();
 
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 }
 
 document
@@ -1006,14 +958,11 @@ document
     .addEventListener(
         "keydown",
         function(event) {
-
             if (event.key === "Enter") {
                 checkPassword();
             }
-
         }
     );
-
 </script>
 
 </body>

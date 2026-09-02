@@ -35,8 +35,6 @@ body {
     overflow-x: hidden;
 }
 
-/* PASSWORD SCREEN */
-
 #passwordScreen {
     position: fixed;
     inset: 0;
@@ -114,8 +112,6 @@ body {
 .passwordBox button:hover {
     background: var(--accent-dark);
 }
-
-/* MAIN WEBSITE */
 
 #website {
     display: none;
@@ -349,7 +345,6 @@ footer {
     from {
         opacity: 0;
     }
-
     to {
         opacity: 1;
     }
@@ -360,7 +355,6 @@ footer {
         opacity: 0;
         transform: translateY(20px) scale(.97);
     }
-
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -368,37 +362,14 @@ footer {
 }
 
 @keyframes passwordShake {
-    0% {
-        transform: translateX(0);
-    }
-
-    15% {
-        transform: translateX(-9px);
-    }
-
-    30% {
-        transform: translateX(9px);
-    }
-
-    45% {
-        transform: translateX(-7px);
-    }
-
-    60% {
-        transform: translateX(7px);
-    }
-
-    75% {
-        transform: translateX(-4px);
-    }
-
-    90% {
-        transform: translateX(4px);
-    }
-
-    100% {
-        transform: translateX(0);
-    }
+    0% { transform: translateX(0); }
+    15% { transform: translateX(-9px); }
+    30% { transform: translateX(9px); }
+    45% { transform: translateX(-7px); }
+    60% { transform: translateX(7px); }
+    75% { transform: translateX(-4px); }
+    90% { transform: translateX(4px); }
+    100% { transform: translateX(0); }
 }
 
 @keyframes passwordErrorFade {
@@ -432,7 +403,6 @@ footer {
         opacity: 0;
         transform: translateY(8px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -444,7 +414,6 @@ footer {
         opacity: 0;
         transform: translateY(15px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -628,26 +597,12 @@ function getGameName(number) {
 function gameCard(number) {
     const name = getGameName(number);
 
-    return `
-        <div class="game">
-            <img
-                src="${number}.png"
-                alt="${name}"
-            >
-
-            <h3>${name}</h3>
-
-            <p>${name}</p>
-
-            <a
-                class="play"
-                href="${number}.html"
-                onclick="recordVisit(${number})"
-            >
-                Play
-            </a>
-        </div>
-    `;
+    return '<div class="game">' +
+        '<img src="' + number + '.png" alt="' + name + '">' +
+        '<h3>' + name + '</h3>' +
+        '<p>' + name + '</p>' +
+        '<a class="play" href="' + number + '.html" onclick="recordVisit(' + number + ')">Play</a>' +
+        '</div>';
 }
 
 function getTodayKey() {
@@ -703,11 +658,8 @@ function getPopularGames() {
     );
 
     games.sort((a, b) => {
-        const visitsA =
-            popularity.visits[a] || 0;
-
-        const visitsB =
-            popularity.visits[b] || 0;
+        const visitsA = popularity.visits[a] || 0;
+        const visitsB = popularity.visits[b] || 0;
 
         if (visitsA !== visitsB) {
             return visitsB - visitsA;
@@ -720,8 +672,7 @@ function getPopularGames() {
 }
 
 function renderHomeGames() {
-    const list =
-        document.getElementById("gameList");
+    const list = document.getElementById("gameList");
 
     list.innerHTML =
         getPopularGames()
@@ -733,8 +684,7 @@ function renderHomeGames() {
 }
 
 function renderAllGames() {
-    const list =
-        document.getElementById("allGameList");
+    const list = document.getElementById("allGameList");
 
     list.innerHTML =
         Array.from(
@@ -749,28 +699,19 @@ function addGameJelly() {
     document.querySelectorAll(".game").forEach(game => {
         let x = 0;
         let y = 0;
-
         let targetX = 0;
         let targetY = 0;
-
         let velocityX = 0;
         let velocityY = 0;
 
         game.addEventListener("mousemove", event => {
-            const rect =
-                game.getBoundingClientRect();
+            const rect = game.getBoundingClientRect();
 
-            const mouseX =
-                event.clientX - rect.left;
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
 
-            const mouseY =
-                event.clientY - rect.top;
-
-            const centerX =
-                rect.width / 2;
-
-            const centerY =
-                rect.height / 2;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
 
             targetX =
                 ((mouseX - centerX) / centerX) * 12;
@@ -785,11 +726,8 @@ function addGameJelly() {
         });
 
         function animate() {
-            velocityX +=
-                (targetX - x) * .15;
-
-            velocityY +=
-                (targetY - y) * .15;
+            velocityX += (targetX - x) * .15;
+            velocityY += (targetY - y) * .15;
 
             velocityX *= .72;
             velocityY *= .72;
@@ -801,7 +739,10 @@ function addGameJelly() {
                 (velocityX - velocityY) * .45;
 
             game.style.transform =
-                `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg)`;
+                "translate3d(" +
+                x + "px, " +
+                y + "px, 0) rotate(" +
+                rotation + "deg)";
 
             requestAnimationFrame(animate);
         }
@@ -813,16 +754,13 @@ function addGameJelly() {
 document.querySelectorAll(".navButton").forEach(button => {
     let x = 0;
     let y = 0;
-
     let targetX = 0;
     let targetY = 0;
-
     let velocityX = 0;
     let velocityY = 0;
 
     button.addEventListener("mousemove", event => {
-        const rect =
-            button.getBoundingClientRect();
+        const rect = button.getBoundingClientRect();
 
         targetX =
             ((event.clientX - rect.left - rect.width / 2) /
@@ -839,11 +777,8 @@ document.querySelectorAll(".navButton").forEach(button => {
     });
 
     function animate() {
-        velocityX +=
-            (targetX - x) * .16;
-
-        velocityY +=
-            (targetY - y) * .16;
+        velocityX += (targetX - x) * .16;
+        velocityY += (targetY - y) * .16;
 
         velocityX *= .72;
         velocityY *= .72;
@@ -855,7 +790,10 @@ document.querySelectorAll(".navButton").forEach(button => {
             (velocityX - velocityY) * .65;
 
         button.style.transform =
-            `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg)`;
+            "translate3d(" +
+            x + "px, " +
+            y + "px, 0) rotate(" +
+            rotation + "deg)";
 
         requestAnimationFrame(animate);
     }
@@ -866,14 +804,9 @@ document.querySelectorAll(".navButton").forEach(button => {
 function showHome(event) {
     event.preventDefault();
 
-    document.getElementById("website")
-        .style.display = "block";
-
-    document.getElementById("gamesPage")
-        .style.display = "none";
-
-    document.getElementById("cloudGaming")
-        .style.display = "none";
+    document.getElementById("website").style.display = "block";
+    document.getElementById("gamesPage").style.display = "none";
+    document.getElementById("cloudGaming").style.display = "none";
 
     renderHomeGames();
 
@@ -883,14 +816,9 @@ function showHome(event) {
 function showGames(event) {
     event.preventDefault();
 
-    document.getElementById("website")
-        .style.display = "none";
-
-    document.getElementById("gamesPage")
-        .style.display = "block";
-
-    document.getElementById("cloudGaming")
-        .style.display = "none";
+    document.getElementById("website").style.display = "none";
+    document.getElementById("gamesPage").style.display = "block";
+    document.getElementById("cloudGaming").style.display = "none";
 
     renderAllGames();
 
@@ -926,27 +854,17 @@ function checkPassword() {
 function openCloudGaming(event) {
     event.preventDefault();
 
-    document.getElementById("website")
-        .style.display = "none";
-
-    document.getElementById("gamesPage")
-        .style.display = "none";
-
-    document.getElementById("cloudGaming")
-        .style.display = "block";
+    document.getElementById("website").style.display = "none";
+    document.getElementById("gamesPage").style.display = "none";
+    document.getElementById("cloudGaming").style.display = "block";
 
     window.scrollTo(0, 0);
 }
 
 function goBack() {
-    document.getElementById("cloudGaming")
-        .style.display = "none";
-
-    document.getElementById("gamesPage")
-        .style.display = "none";
-
-    document.getElementById("website")
-        .style.display = "block";
+    document.getElementById("cloudGaming").style.display = "none";
+    document.getElementById("gamesPage").style.display = "none";
+    document.getElementById("website").style.display = "block";
 
     renderHomeGames();
 
@@ -955,14 +873,11 @@ function goBack() {
 
 document
     .getElementById("passwordInput")
-    .addEventListener(
-        "keydown",
-        function(event) {
-            if (event.key === "Enter") {
-                checkPassword();
-            }
+    .addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            checkPassword();
         }
-    );
+    });
 </script>
 
 </body>

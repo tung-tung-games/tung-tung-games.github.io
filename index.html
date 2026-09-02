@@ -1,5 +1,5 @@
-html
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -58,9 +58,6 @@ body {
     border-radius: 20px;
     box-shadow: 0 25px 70px rgba(0,0,0,.55);
     animation: passwordIn .7s ease;
-    transition:
-        border-color .7s ease,
-        box-shadow .7s ease;
 }
 
 .passwordBox.errorState {
@@ -99,7 +96,6 @@ body {
     font-size: 16px;
     text-align: center;
     margin-bottom: 14px;
-    transition: border-color .2s ease;
 }
 
 .passwordBox button {
@@ -117,13 +113,6 @@ body {
 
 .passwordBox button:hover {
     background: var(--accent-dark);
-}
-
-#passwordError {
-    display: none;
-    color: #ff5555;
-    margin-top: 14px;
-    margin-bottom: 0;
 }
 
 /* MAIN WEBSITE */
@@ -170,8 +159,6 @@ header {
     font-size: 28px;
 }
 
-/* TOP BAR */
-
 nav {
     display: flex;
     align-items: center;
@@ -204,8 +191,6 @@ nav {
     box-shadow: 0 8px 20px rgba(0,0,0,.2);
 }
 
-/* HERO */
-
 .hero {
     text-align: center;
     padding: 65px 20px 35px;
@@ -217,8 +202,6 @@ nav {
     animation: heroIn .7s ease;
 }
 
-/* GAME GRID */
-
 .games {
     max-width: 1250px;
     margin: auto;
@@ -227,8 +210,6 @@ nav {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 25px;
 }
-
-/* WHOLE GAME TILE */
 
 .game {
     position: relative;
@@ -287,8 +268,6 @@ nav {
     box-shadow: 0 8px 22px rgba(200,162,122,.18);
 }
 
-/* FOOTER */
-
 footer {
     text-align: center;
     padding: 45px 30px 35px;
@@ -304,15 +283,11 @@ footer {
     color: var(--accent);
 }
 
-/* ALL GAMES */
-
 #gamesPage {
     display: none;
     min-height: 100vh;
     animation: pageIn .5s ease;
 }
-
-/* CLOUD GAMING */
 
 #cloudGaming {
     display: none;
@@ -370,8 +345,6 @@ footer {
     background: var(--accent-dark);
 }
 
-/* ANIMATIONS */
-
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -393,8 +366,6 @@ footer {
         transform: translateY(0) scale(1);
     }
 }
-
-/* PASSWORD ERROR SHAKE */
 
 @keyframes passwordShake {
     0% {
@@ -429,8 +400,6 @@ footer {
         transform: translateX(0);
     }
 }
-
-/* PASSWORD BORDER BEIGE -> RED -> BEIGE */
 
 @keyframes passwordErrorFade {
     0% {
@@ -492,8 +461,6 @@ footer {
     }
 }
 
-/* MOBILE */
-
 @media(max-width:700px) {
 
     header {
@@ -532,125 +499,132 @@ footer {
     }
 }
 </style>
+
 </head>
 
 <body>
 
 <div id="passwordScreen">
 
-    <div class="passwordBox" id="passwordBox">
+```
+<div class="passwordBox" id="passwordBox">
 
-        <img src="tung-nobg.png" alt="Tung">
+    <img src="tung-nobg.png" alt="Tung">
 
-        <h2>Enter Password</h2>
+    <h2>Enter Password</h2>
 
-        <p>Enter the password to access Tung Games.</p>
+    <p>Enter the password to access Tung Games.</p>
 
-        <input
-            type="password"
-            id="passwordInput"
-            placeholder="Password"
-            autocomplete="off"
-        >
+    <input
+        type="password"
+        id="passwordInput"
+        placeholder="Password"
+        autocomplete="off"
+    >
 
-        <button onclick="checkPassword()">Enter</button>
+    <button onclick="checkPassword()">Enter</button>
 
-        <p id="passwordError">Incorrect password!</p>
-
-    </div>
+</div>
+```
 
 </div>
 
 <div id="website">
 
-    <header>
+```
+<header>
 
-        <div class="logo">
-            <img src="tung-nobg.png" alt="Tung">
-            <h1>Tung Games</h1>
-        </div>
+    <div class="logo">
+        <img src="tung-nobg.png" alt="Tung">
+        <h1>Tung Games</h1>
+    </div>
 
-        <nav>
-
-            <a
-                href="#"
-                class="navButton"
-                onclick="showHome(event)"
-            >Home</a>
-
-            <a
-                href="#"
-                class="navButton"
-                onclick="showGames(event)"
-            >Games</a>
-
-        </nav>
-
-    </header>
-
-    <section class="hero">
-        <h2>Tung Games</h2>
-    </section>
-
-    <section
-        class="games"
-        id="gameList"
-    ></section>
-
-    <footer>
+    <nav>
 
         <a
             href="#"
-            class="secretLink"
-            onclick="openCloudGaming(event)"
-        >
-            © 2026 Tung Games
-        </a>
+            class="navButton"
+            onclick="showHome(event)"
+        >Home</a>
 
-    </footer>
+        <a
+            href="#"
+            class="navButton"
+            onclick="showGames(event)"
+        >Games</a>
+
+    </nav>
+
+</header>
+
+<section class="hero">
+    <h2>Tung Games</h2>
+</section>
+
+<section
+    class="games"
+    id="gameList"
+></section>
+
+<footer>
+
+    <a
+        href="#"
+        class="secretLink"
+        onclick="openCloudGaming(event)"
+    >
+        © 2026 Tung Games
+    </a>
+
+</footer>
+```
 
 </div>
 
 <div id="gamesPage">
 
-    <section class="hero">
-        <h2>All Games</h2>
-    </section>
+```
+<section class="hero">
+    <h2>All Games</h2>
+</section>
 
-    <section
-        class="games"
-        id="allGameList"
-    ></section>
+<section
+    class="games"
+    id="allGameList"
+></section>
+```
 
 </div>
 
 <div id="cloudGaming">
 
-    <div class="cloudHeader">
+```
+<div class="cloudHeader">
 
-        <img
-            src="tung-nobg.png"
-            alt="Tung"
-        >
+    <img
+        src="tung-nobg.png"
+        alt="Tung"
+    >
 
-        <h1>Tung Cloud Gaming</h1>
+    <h1>Tung Cloud Gaming</h1>
 
-    </div>
+</div>
 
-    <div class="cloudContent">
+<div class="cloudContent">
 
-        <h2>Cloud Gaming</h2>
+    <h2>Cloud Gaming</h2>
 
-        <p>Welcome to Tung Cloud Gaming.</p>
+    <p>Welcome to Tung Cloud Gaming.</p>
 
-        <button
-            class="cloudButton"
-            onclick="goBack()"
-        >
-            Back
-        </button>
+    <button
+        class="cloudButton"
+        onclick="goBack()"
+    >
+        Back
+    </button>
 
-    </div>
+</div>
+```
 
 </div>
 
@@ -800,8 +774,6 @@ function renderAllGames() {
     addGameJelly();
 }
 
-/* GAME TILE CURSOR MOVEMENT */
-
 function addGameJelly() {
 
     document.querySelectorAll(".game").forEach(game => {
@@ -873,8 +845,6 @@ function addGameJelly() {
     });
 }
 
-/* TOP BAR CURSOR MOVEMENT */
-
 document.querySelectorAll(".navButton").forEach(button => {
 
     let x = 0;
@@ -933,8 +903,6 @@ document.querySelectorAll(".navButton").forEach(button => {
     animate();
 });
 
-/* HOME */
-
 function showHome(event) {
 
     event.preventDefault();
@@ -952,8 +920,6 @@ function showHome(event) {
 
     window.scrollTo(0,0);
 }
-
-/* GAMES */
 
 function showGames(event) {
 
@@ -973,15 +939,10 @@ function showGames(event) {
     window.scrollTo(0,0);
 }
 
-/* PASSWORD */
-
 function checkPassword() {
 
     const password =
         document.getElementById("passwordInput").value;
-
-    const error =
-        document.getElementById("passwordError");
 
     const box =
         document.getElementById("passwordBox");
@@ -996,13 +957,9 @@ function checkPassword() {
         document.getElementById("website")
             .style.display = "block";
 
-        error.style.display = "none";
-
         renderHomeGames();
 
     } else {
-
-        error.style.display = "block";
 
         box.classList.remove("errorState");
 
@@ -1011,8 +968,6 @@ function checkPassword() {
         box.classList.add("errorState");
     }
 }
-
-/* CLOUD GAMING */
 
 function openCloudGaming(event) {
 
@@ -1030,8 +985,6 @@ function openCloudGaming(event) {
     window.scrollTo(0,0);
 }
 
-/* BACK */
-
 function goBack() {
 
     document.getElementById("cloudGaming")
@@ -1047,8 +1000,6 @@ function goBack() {
 
     window.scrollTo(0,0);
 }
-
-/* ENTER KEY */
 
 document
     .getElementById("passwordInput")

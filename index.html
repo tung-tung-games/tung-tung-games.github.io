@@ -118,7 +118,7 @@ cursor:not-allowed;
 transform:none;
 }
 
-#website,#gamesPage{
+#website,#gamesPage,#gamePage{
 min-height:100vh;
 transition:opacity .45s ease,transform .45s ease;
 }
@@ -129,11 +129,7 @@ transform:translateY(12px)!important;
 pointer-events:none;
 }
 
-#website{
-display:none;
-}
-
-#gamesPage{
+#website,#gamesPage,#gamePage{
 display:none;
 }
 
@@ -287,21 +283,47 @@ padding:45px 30px 35px;
 color:#777;
 }
 
-#gameLoader{
+#gamePage{
 position:fixed;
 inset:0;
+background:var(--bg);
+z-index:500;
+overflow:hidden;
+}
+
+#gamePage header{
+position:absolute;
+left:0;
+right:0;
+top:0;
+}
+
+.gameFrame{
+position:absolute;
+top:70px;
+left:0;
+width:100%;
+height:calc(100% - 70px);
+border:0;
 background:#121212;
-z-index:10000;
-display:none;
+}
+
+#gameLoader{
+position:absolute;
+inset:70px 0 0 0;
+background:#121212;
+z-index:600;
+display:flex;
 align-items:center;
 justify-content:center;
 flex-direction:column;
 opacity:1;
-transition:opacity .45s ease;
+transition:opacity .5s ease,visibility .5s ease;
 }
 
 #gameLoader.hidden{
 opacity:0;
+visibility:hidden;
 pointer-events:none;
 }
 
@@ -309,8 +331,14 @@ pointer-events:none;
 width:120px;
 height:120px;
 object-fit:contain;
-margin-bottom:28px;
+margin-bottom:25px;
 animation:loaderFloat 2.5s ease-in-out infinite;
+}
+
+.loadingText{
+font-size:18px;
+font-weight:bold;
+margin-bottom:15px;
 }
 
 .loaderBar{
@@ -327,7 +355,7 @@ height:100%;
 width:0%;
 background:var(--accent);
 border-radius:20px;
-transition:width .1s linear;
+transition:width .2s ease-out;
 }
 
 @keyframes passwordShake{
@@ -370,13 +398,6 @@ nav{gap:6px}
 <p>Enter the password to access Tung Games.</p>
 <input type="password" id="passwordInput" placeholder="Password" autocomplete="off">
 <button id="passwordButton" onclick="checkPassword()">Enter</button>
-</div>
-</div>
-
-<div id="gameLoader">
-<img src="tung-nobg.png" alt="Tung">
-<div class="loaderBar">
-<div class="loaderProgress" id="loaderProgress"></div>
 </div>
 </div>
 
@@ -424,6 +445,29 @@ nav{gap:6px}
 <footer>
 © 2026 Tung Games
 </footer>
+</div>
+
+<div id="gamePage">
+<header>
+<div class="logo">
+<img src="tung-nobg.png" alt="Tung">
+<h1>Tung Games</h1>
+</div>
+<nav>
+<a href="#" class="navButton" onclick="closeGame(event)">Home</a>
+<a href="#" class="navButton" onclick="showGamesFromGame(event)">Games</a>
+</nav>
+</header>
+
+<iframe id="gameFrame" class="gameFrame"></iframe>
+
+<div id="gameLoader">
+<img src="tung-nobg.png" alt="Tung">
+<div class="loadingText">Loading game...</div>
+<div class="loaderBar">
+<div class="loaderProgress" id="loaderProgress"></div>
+</div>
+</div>
 </div>
 
 <script>
@@ -652,31 +696,82 @@ if(gameLoading)return;
 gameLoading=true;
 recordVisit(number);
 
+const gamePage=document.getElementById("gamePage");
+const frame=document.getElementById("gameFrame");
 const loader=document.getElementById("gameLoader");
 const progress=document.getElementById("loaderProgress");
 
-loader.style.display="flex";
+frame.src=number+".html";
+gamePage.style.display="block";
+gamePage.classList.remove("pageHidden");
 loader.classList.remove("hidden");
 progress.style.width="0%";
 
 const start=performance.now();
 const duration=15000;
-const target=number+".html";
+let displayedProgress=0;
 
 function updateLoader(now){
 const elapsed=now-start;
-const percent=Math.min((elapsed/duration)*100,100);
+const realProgress=Math.min(elapsed/duration,1);
 
-progress.style.width=percent+"%";
+const targetProgress=realProgress>=1
+?100
+:Math.min(realProgress*100+Math.sin(elapsed/370)*2+Math.sin(elapsed/910)*1.5,96);
 
-if(elapsed<duration){
+displayedProgress+=(targetProgress-displayedProgress)*.08;
+
+if(realProgress>=1){
+displayedProgress=100;
+}
+
+progress.style.width=displayedProgress+"%";
+
+if(realProgress<1){
 requestAnimationFrame(updateLoader);
 }else{
-window.location.href=target;
+setTimeout(()=>{
+loader.classList.add("hidden");
+gameLoading=false;
+},300);
 }
 }
 
 requestAnimationFrame(updateLoader);
+}
+
+function closeGame(event){
+event.preventDefault();
+
+if(gameLoading)return;
+
+const gamePage=document.getElementById("gamePage");
+const website=document.getElementById("website");
+const frame=document.getElementById("gameFrame");
+
+frame.src="";
+gamePage.style.display="none";
+website.style.display="block";
+website.classList.remove("pageHidden");
+renderHomeGames();
+window.scrollTo(0,0);
+}
+
+function showGamesFromGame(event){
+event.preventDefault();
+
+if(gameLoading)return;
+
+const gamePage=document.getElementById("gamePage");
+const gamesPage=document.getElementById("gamesPage");
+const frame=document.getElementById("gameFrame");
+
+frame.src="";
+gamePage.style.display="none";
+gamesPage.style.display="block";
+gamesPage.classList.remove("pageHidden");
+renderAllGames();
+window.scrollTo(0,0);
 }
 
 function checkPassword(){

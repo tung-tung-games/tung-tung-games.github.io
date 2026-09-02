@@ -11,44 +11,298 @@
 :root{--bg:#121212;--card:#1d1d1d;--accent:#C8A27A;--accent-dark:#A9825D;--text:#fff;--secondary:#bbb}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-#passwordScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:9999;animation:fadeIn .6s ease}
-.passwordBox{width:90%;max-width:400px;padding:42px;text-align:center;background:var(--card);border:2px solid rgba(200,162,122,.45);border-radius:20px;box-shadow:0 25px 70px rgba(0,0,0,.55);animation:passwordIn .7s ease}
-.passwordBox.errorState{animation:passwordShake .55s ease,passwordErrorFade 1.4s ease forwards}
-.passwordBox img{width:105px;height:105px;object-fit:contain;display:block;margin:0 auto 20px;animation:float 4s ease-in-out infinite}
-.passwordBox h2{font-size:27px;margin-bottom:10px}
-.passwordBox p{color:var(--secondary);margin-bottom:20px}
-.passwordBox input{width:100%;padding:14px;border:2px solid transparent;border-radius:9px;outline:none;background:white;color:#111;font-size:16px;text-align:center;margin-bottom:14px}
-.passwordBox button{width:100%;padding:14px;border:0;border-radius:9px;background:var(--accent);color:white;font-size:16px;font-weight:bold;cursor:pointer;transition:.25s ease}
-.passwordBox button:hover{background:var(--accent-dark)}
-#website{display:none;animation:pageIn .5s ease}
-header{height:70px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;background:rgba(31,31,31,.96);border-bottom:1px solid rgba(255,255,255,.025);box-shadow:0 5px 20px rgba(0,0,0,.35);backdrop-filter:blur(12px)}
-.logo{display:flex;align-items:center;gap:12px}
-.logo img{width:42px;height:42px;object-fit:cover;border-radius:50%;transition:.3s ease}
-.logo:hover img{transform:rotate(8deg) scale(1.08)}
-.logo h1{font-size:28px}
-nav{display:flex;align-items:center;gap:10px}
-.navButton{display:inline-flex;align-items:center;justify-content:center;min-width:82px;padding:10px 18px;border-radius:10px;color:white;text-decoration:none;font-weight:bold;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.045);cursor:pointer;will-change:transform;transition:background .25s ease,border-color .25s ease,box-shadow .25s ease}
-.navButton:hover{background:rgba(200,162,122,.12);border-color:rgba(200,162,122,.35);box-shadow:0 8px 20px rgba(0,0,0,.2)}
-.hero{text-align:center;padding:65px 20px 35px}
-.hero h2{font-size:46px;letter-spacing:-1px;animation:heroIn .7s ease}
-.games{max-width:1250px;margin:auto;padding:35px 40px 50px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px}
-.game{position:relative;padding:22px;text-align:center;background:var(--card);border:1px solid rgba(255,255,255,.035);border-radius:17px;box-shadow:0 8px 25px rgba(0,0,0,.2);will-change:transform;transform:translate3d(0,0,0) rotate(0deg);transition:border-color .25s ease,box-shadow .25s ease}
-.game:hover{border-color:rgba(200,162,122,.45);box-shadow:0 22px 45px rgba(0,0,0,.35),0 0 28px rgba(200,162,122,.07)}
-.game img{width:100%;height:160px;object-fit:cover;border-radius:11px;margin-bottom:16px}
-.game h3{margin-bottom:10px;font-size:20px}
-.game p{color:var(--secondary);margin-bottom:20px;font-size:14px}
-.play{display:inline-block;padding:12px 23px;background:var(--accent);color:white;text-decoration:none;border-radius:8px;font-weight:bold;transition:.25s ease}
-.play:hover{background:var(--accent-dark);box-shadow:0 8px 22px rgba(200,162,122,.18)}
-footer{text-align:center;padding:45px 30px 35px}
-#gamesPage{display:none;min-height:100vh;animation:pageIn .5s ease}
-#gamesPage header{position:sticky}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes passwordIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes passwordShake{0%{transform:translateX(0)}15%{transform:translateX(-9px)}30%{transform:translateX(9px)}45%{transform:translateX(-7px)}60%{transform:translateX(7px)}75%{transform:translateX(-4px)}90%{transform:translateX(4px)}100%{transform:translateX(0)}}
-@keyframes passwordErrorFade{0%{border-color:rgba(200,162,122,.45);box-shadow:0 25px 70px rgba(0,0,0,.55)}25%{border-color:#ff3b3b;box-shadow:0 0 0 2px rgba(255,59,59,.15),0 20px 60px rgba(255,0,0,.18)}55%{border-color:#ff3b3b;box-shadow:0 0 0 2px rgba(255,59,59,.15),0 20px 60px rgba(255,0,0,.18)}100%{border-color:rgba(200,162,122,.45);box-shadow:0 25px 70px rgba(0,0,0,.55)}}
-@keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes heroIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+#passwordScreen{
+position:fixed;
+inset:0;
+display:flex;
+align-items:center;
+justify-content:center;
+background:var(--bg);
+z-index:9999;
+opacity:1;
+transition:opacity .55s ease,visibility .55s ease;
+}
+
+#passwordScreen.hidden{
+opacity:0;
+visibility:hidden;
+pointer-events:none;
+}
+
+.passwordBox{
+width:90%;
+max-width:400px;
+padding:42px;
+text-align:center;
+background:var(--card);
+border:2px solid rgba(200,162,122,.45);
+border-radius:20px;
+box-shadow:0 25px 70px rgba(0,0,0,.55);
+transition:transform .45s ease,opacity .45s ease,border-color .25s ease,box-shadow .25s ease;
+}
+
+.passwordBox.entering{
+opacity:0;
+transform:translateY(25px) scale(.96);
+}
+
+.passwordBox.errorState{
+animation:passwordShake .55s ease;
+border-color:#ff3b3b;
+box-shadow:0 0 0 2px rgba(255,59,59,.12),0 20px 60px rgba(255,0,0,.15);
+}
+
+.passwordBox.cooldown{
+opacity:.65;
+}
+
+.passwordBox img{
+width:105px;
+height:105px;
+object-fit:contain;
+display:block;
+margin:0 auto 20px;
+animation:float 4s ease-in-out infinite;
+}
+
+.passwordBox h2{
+font-size:27px;
+margin-bottom:10px;
+}
+
+.passwordBox p{
+color:var(--secondary);
+margin-bottom:20px;
+}
+
+.passwordBox input{
+width:100%;
+padding:14px;
+border:2px solid transparent;
+border-radius:9px;
+outline:none;
+background:white;
+color:#111;
+font-size:16px;
+text-align:center;
+margin-bottom:14px;
+transition:box-shadow .25s ease,transform .25s ease;
+}
+
+.passwordBox input:focus{
+box-shadow:0 0 0 3px rgba(200,162,122,.2);
+}
+
+.passwordBox button{
+width:100%;
+padding:14px;
+border:0;
+border-radius:9px;
+background:var(--accent);
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+transition:background .25s ease,transform .2s ease,opacity .25s ease;
+}
+
+.passwordBox button:hover{
+background:var(--accent-dark);
+transform:translateY(-2px);
+}
+
+.passwordBox button:disabled{
+opacity:.45;
+cursor:not-allowed;
+transform:none;
+}
+
+#website,#gamesPage{
+min-height:100vh;
+transition:opacity .45s ease,transform .45s ease;
+}
+
+.pageHidden{
+opacity:0!important;
+transform:translateY(12px)!important;
+pointer-events:none;
+}
+
+#website{
+display:none;
+}
+
+#gamesPage{
+display:none;
+}
+
+header{
+height:70px;
+padding:0 40px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+position:sticky;
+top:0;
+z-index:100;
+background:rgba(31,31,31,.96);
+border-bottom:1px solid rgba(255,255,255,.025);
+box-shadow:0 5px 20px rgba(0,0,0,.35);
+backdrop-filter:blur(12px);
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.logo img{
+width:42px;
+height:42px;
+object-fit:cover;
+border-radius:50%;
+transition:transform .3s ease;
+}
+
+.logo:hover img{
+transform:rotate(8deg) scale(1.08);
+}
+
+.logo h1{
+font-size:28px;
+}
+
+nav{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.navButton{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+min-width:82px;
+padding:10px 18px;
+border-radius:10px;
+color:white;
+text-decoration:none;
+font-weight:bold;
+background:rgba(255,255,255,.035);
+border:1px solid rgba(255,255,255,.045);
+cursor:pointer;
+will-change:transform;
+transition:background .25s ease,border-color .25s ease,box-shadow .25s ease;
+}
+
+.navButton:hover{
+background:rgba(200,162,122,.12);
+border-color:rgba(200,162,122,.35);
+box-shadow:0 8px 20px rgba(0,0,0,.2);
+}
+
+.hero{
+text-align:center;
+padding:65px 20px 35px;
+}
+
+.hero h2{
+font-size:46px;
+letter-spacing:-1px;
+}
+
+.games{
+max-width:1250px;
+margin:auto;
+padding:35px 40px 50px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.game{
+position:relative;
+padding:22px;
+text-align:center;
+background:var(--card);
+border:1px solid rgba(255,255,255,.035);
+border-radius:17px;
+box-shadow:0 8px 25px rgba(0,0,0,.2);
+will-change:transform;
+transform:translate3d(0,0,0) rotate(0deg);
+transition:border-color .25s ease,box-shadow .25s ease;
+}
+
+.game:hover{
+border-color:rgba(200,162,122,.45);
+box-shadow:0 22px 45px rgba(0,0,0,.35),0 0 28px rgba(200,162,122,.07);
+}
+
+.game img{
+width:100%;
+height:160px;
+object-fit:cover;
+border-radius:11px;
+margin-bottom:16px;
+transition:transform .3s ease;
+}
+
+.game:hover img{
+transform:scale(1.015);
+}
+
+.game h3{
+margin-bottom:10px;
+font-size:20px;
+}
+
+.game p{
+color:var(--secondary);
+margin-bottom:20px;
+font-size:14px;
+}
+
+.play{
+display:inline-block;
+padding:12px 23px;
+background:var(--accent);
+color:white;
+text-decoration:none;
+border-radius:8px;
+font-weight:bold;
+transition:background .25s ease,transform .2s ease,box-shadow .25s ease;
+}
+
+.play:hover{
+background:var(--accent-dark);
+transform:translateY(-2px);
+box-shadow:0 8px 22px rgba(200,162,122,.18);
+}
+
+footer{
+text-align:center;
+padding:45px 30px 35px;
+color:#777;
+}
+
+@keyframes passwordShake{
+0%{transform:translateX(0)}
+15%{transform:translateX(-9px)}
+30%{transform:translateX(9px)}
+45%{transform:translateX(-7px)}
+60%{transform:translateX(7px)}
+75%{transform:translateX(-4px)}
+90%{transform:translateX(4px)}
+100%{transform:translateX(0)}
+}
+
+@keyframes float{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-6px)}
+}
+
 @media(max-width:700px){
 header{padding:0 20px}
 nav{gap:6px}
@@ -56,8 +310,8 @@ nav{gap:6px}
 .logo h1{font-size:22px}
 .hero h2{font-size:36px}
 .games{grid-template-columns:1fr;padding:25px 20px}
-}
-</style>
+} </style>
+
 </head>
 <body>
 
@@ -67,7 +321,7 @@ nav{gap:6px}
 <h2>Enter Password</h2>
 <p>Enter the password to access Tung Games.</p>
 <input type="password" id="passwordInput" placeholder="Password" autocomplete="off">
-<button onclick="checkPassword()">Enter</button>
+<button id="passwordButton" onclick="checkPassword()">Enter</button>
 </div>
 </div>
 
@@ -88,7 +342,10 @@ nav{gap:6px}
 </section>
 
 <section class="games" id="gameList"></section>
-  
+
+<footer>
+© 2026 Tung Games
+</footer>
 </div>
 
 <div id="gamesPage">
@@ -109,12 +366,17 @@ nav{gap:6px}
 
 <section class="games" id="allGameList"></section>
 
+<footer>
+© 2026 Tung Games
+</footer>
 </div>
 
 <script>
 const GAME_COUNT=100;
 const HOME_GAME_COUNT=8;
 const GAME_NAMES={};
+let passwordLocked=false;
+let transitionBusy=false;
 
 for(let i=1;i<=GAME_COUNT;i++){
 GAME_NAMES[i]="Game "+i;
@@ -272,39 +534,100 @@ animate();
 });
 }
 
+function switchPage(from,to){
+if(transitionBusy)return;
+
+transitionBusy=true;
+
+from.classList.add("pageHidden");
+
+setTimeout(()=>{
+from.style.display="none";
+to.style.display="block";
+to.classList.add("pageHidden");
+
+requestAnimationFrame(()=>{
+requestAnimationFrame(()=>{
+to.classList.remove("pageHidden");
+});
+});
+},300);
+
+setTimeout(()=>{
+transitionBusy=false;
+},750);
+}
+
 function showHome(event){
 event.preventDefault();
 
-document.getElementById("website").style.display="block";
-document.getElementById("gamesPage").style.display="none";
+if(transitionBusy)return;
+
+const gamesPage=document.getElementById("gamesPage");
+const website=document.getElementById("website");
+
+if(website.style.display==="block")return;
 
 renderHomeGames();
+switchPage(gamesPage,website);
 window.scrollTo(0,0);
 }
 
 function showGames(event){
 event.preventDefault();
 
-document.getElementById("website").style.display="none";
-document.getElementById("gamesPage").style.display="block";
+if(transitionBusy)return;
+
+const website=document.getElementById("website");
+const gamesPage=document.getElementById("gamesPage");
+
+if(gamesPage.style.display==="block")return;
 
 renderAllGames();
+switchPage(website,gamesPage);
 window.scrollTo(0,0);
 }
 
 function checkPassword(){
+if(passwordLocked)return;
+
 const password=document.getElementById("passwordInput").value;
 const box=document.getElementById("passwordBox");
+const input=document.getElementById("passwordInput");
+const button=document.getElementById("passwordButton");
 
 if(password==="TUNG"){
-box.classList.remove("errorState");
+box.classList.add("entering");
+
+setTimeout(()=>{
+document.getElementById("passwordScreen").classList.add("hidden");
+
+setTimeout(()=>{
 document.getElementById("passwordScreen").style.display="none";
 document.getElementById("website").style.display="block";
+document.getElementById("website").classList.remove("pageHidden");
 renderHomeGames();
+},550);
+},100);
+
 }else{
+passwordLocked=true;
+button.disabled=true;
+input.disabled=true;
 box.classList.remove("errorState");
 void box.offsetWidth;
 box.classList.add("errorState");
+box.classList.add("cooldown");
+
+setTimeout(()=>{
+box.classList.remove("errorState");
+box.classList.remove("cooldown");
+input.disabled=false;
+button.disabled=false;
+input.value="";
+input.focus();
+passwordLocked=false;
+},3000);
 }
 }
 
